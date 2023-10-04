@@ -21,20 +21,21 @@ jobs:
           COMMIT_MSG=$(git log --format=%B -n 1)
           if [[ $COMMIT_MSG == *"Release: "* ]]; then
             echo "Bumping Major Version"
-            echo "::set-output name=bump::major"
+            echo "bump=major" >> $GITHUB_ENV
           elif [[ $COMMIT_MSG == *("Major Update: "*|"New Feature: "*|"Improvement: "*|"Performance: "*|"Bug Fix: "*|"Security Fix: "*|"Hotfix: "*) ]]; then
             echo "Bumping Minor Version"
-            echo "::set-output name=bump::minor"
+            echo "bump=minor" >> $GITHUB_ENV
           elif [[ $COMMIT_MSG == *("Minor Update: "*|"Documentation Update: "*|"Build: "*|"CI: "*|"Revert: "*|"Merge: "*|"Style: "*) ]]; then
             echo "Bumping Patch Version"
-            echo "::set-output name=bump::patch"
-          else:
+            echo "bump=patch" >> $GITHUB_ENV
+          else
             echo "No version update"
-            echo "::set-output name=bump::none"
+            echo "bump=none" >> $GITHUB_ENV
           fi
 
+
       - name: Update manifest.json
-        if: steps.determine-version.outputs.bump != 'none'
+        if: env.bump != 'none' # Use env here instead of steps.determine-version.outputs
         run: |
           sudo apt-get install -y jq
           
@@ -45,26 +46,29 @@ jobs:
           MINOR=${VERSION_PARTS[1]}
           PATCH=${VERSION_PARTS[2]}
 
-          if [[ "${{ steps.determine-version.outputs.bump }}" == "major" ]]; then
-            NEW_VERSION="$((MAJOR + 1)).0.0"
-          elif [[ "${{ steps.determine-version.outputs.bump }}" == "minor" ]]; then
-            NEW_VERSION="${MAJOR}.$((MINOR + 1)).0"
+          if [[ "${{ env.bump }}" == "major" ]]; then
+            NEW_ARTIFACT_VERSION="$((MAJOR + 1)).0.0"
+          elif [[ "${{ env.bump }}" == "minor" ]]; then
+            NEW_ARTIFACT_VERSION="${MAJOR}.$((MINOR + 1)).0"
           else
-            NEW_VERSION="${MAJOR}.${MINOR}.$((PATCH + 1))"
+            NEW_ARTIFACT_VERSION="${MAJOR}.${MINOR}.$((PATCH + 1))"
           fi
 
           # Printing the calculated version
-          echo "Calculated version: $NEW_VERSION"
+          echo "Calculated version: $NEW_ARTIFACT_VERSION"
 
-          jq --arg NEW_VERSION "$NEW_VERSION" '.version = $NEW_VERSION' manifest.json > manifest_updated.json
+          # Store the NEW_ARTIFACT_VERSION for next steps
+          echo "NEW_ARTIFACT_VERSION=$NEW_ARTIFACT_VERSION" >> $GITHUB_ENV
+
+          jq --arg NEW_ARTIFACT_VERSION "$NEW_ARTIFACT_VERSION" '.version = $NEW_ARTIFACT_VERSION' manifest.json > manifest_updated.json
           mv manifest_updated.json manifest.json
 
       - name: Commit manifest.json
-        if: steps.determine-version.outputs.bump != 'none'
+        if: env.bump != 'none' # Use env here instead of steps.determine-version.outputs
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/lakshaykaura/Yt_Max_Quality_Switcher.git
           git add manifest.json
-          git commit -m "Version bump to $NEW_VERSION" # Optional: Include the version in the commit message
+          git commit -m "Artifact version bumped to ${{ env.NEW_ARTIFACT_VERSION }} in manifest.json" # Use env variable here for the NEW_ARTIFACT_VERSION
           git push origin HEAD:${{ github.ref }}
