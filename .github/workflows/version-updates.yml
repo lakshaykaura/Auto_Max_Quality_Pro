@@ -12,13 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
-      - name: Check for [auto-bump] in commit message
-        run: |
-          COMMIT_MSG=$(git log --format=%B -n 1)
-          if [[ $COMMIT_MSG == *"[auto-bump]"* ]]; then
-            echo "[auto-bump] detected in commit message. Exiting workflow."
-            exit 78
-          fi
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -26,6 +19,14 @@ jobs:
           token: ${{ secrets.github_token }}
           fetch-depth: 0
           ref: ${{ github.ref }}
+
+      - name: Check for [auto-bump] in commit message
+        run: |
+          COMMIT_MSG=$(git log --format=%B -n 1)
+          if [[ $COMMIT_MSG == *"[auto-bump]"* ]]; then
+            echo "[auto-bump] detected in commit message. Exiting workflow."
+            exit 78
+          fi
 
       - name: Install GitHub CLI
         run: |
