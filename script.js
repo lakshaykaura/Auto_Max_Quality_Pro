@@ -1,18 +1,17 @@
-function loadjQuery(callback) {
-    var script = document.createElement("script");
-    script.src = "https://code.jquery.com/jquery-3.6.0.min.js";
-    script.onload = callback;
-    document.head.appendChild(script);
+function getIntervalAndRun() {
+    chrome.storage.sync.get('checkInterval', function (data) {
+        let interval = data.checkInterval || 15000;
+        window.checkAndAdjustYouTubeVideoQuality(interval);
+    });
 }
 
-window.checkAndAdjustYouTubeVideoQuality = function () {
-    function isYouTubeVideo(url) {
-        return url.indexOf('youtube.com') !== -1 || url.indexOf('youtu.be') !== -1;
-    }
+window.checkAndAdjustYouTubeVideoQuality = function (interval) {
+    let shouldAdjustQuality = false;
+    let timer = null;
 
-    function getYouTubeTitle($context) {
+    function getYouTubeTitle() {
         if (window.location.host.includes('youtube.com')) {
-            let title = $context.find('title').text().replace(' - YouTube', '');
+            let title = document.title.replace(' - YouTube', '');
             return title.replace(/^\(\d+\)\s/, '');
         }
         return null;
@@ -20,7 +19,7 @@ window.checkAndAdjustYouTubeVideoQuality = function () {
 
     function adjustQuality() {
         let settingsButton = document.querySelector('button.ytp-settings-button');
-        if (settingsButton) {
+        if (settingsButton && shouldAdjustQuality) {
             settingsButton.click();
 
             setTimeout(() => {
@@ -31,28 +30,37 @@ window.checkAndAdjustYouTubeVideoQuality = function () {
                     setTimeout(() => {
                         let availableQualities = document.querySelectorAll('.ytp-quality-menu .ytp-panel-menu[role="menu"] > .ytp-menuitem');
                         if (availableQualities.length > 0) {
-                            let highestQuality = availableQualities[0];
-                            highestQuality.click();
-                            console.log(`Changed to ${highestQuality.innerText.trim()} quality for: ${getYouTubeTitle($(document))}`);
+                            availableQualities[0].click();
+                            console.log(`Changed quality to ${availableQualities[0].innerText.trim()} for: ${getYouTubeTitle()}`);
                         }
 
                         // Close settings panel
                         settingsButton.click();
+
+                        // Reset the flag
+                        shouldAdjustQuality = false;
                     }, 500);
                 }
             }, 500);
         }
     }
 
-    if (window.location.host.includes('youtube.com') || isYouTubeVideo(window.location.href)) {
-        adjustQuality();
+    // Adjust the quality immediately when the page loads
+    shouldAdjustQuality = true;
+    adjustQuality();
+
+    // Observe interactions with the settings button
+    const settingsButton = document.querySelector('button.ytp-settings-button');
+    if (settingsButton) {
+        settingsButton.addEventListener('click', function () {
+            // Flag that the user interacted with the settings
+            shouldAdjustQuality = true;
+
+            // If the user interacts with the settings, set a timer to adjust the quality after the given interval
+            clearTimeout(timer);
+            timer = setTimeout(adjustQuality, interval);
+        });
     }
+};
 
-    setTimeout(window.checkAndAdjustYouTubeVideoQuality, 15000);  // Check every 15 seconds to account for user manually changing quality or video changes
-}
-
-if (typeof jQuery === 'undefined') {
-    loadjQuery(window.checkAndAdjustYouTubeVideoQuality);
-} else {
-    window.checkAndAdjustYouTubeVideoQuality();
-}
+getIntervalAndRun();

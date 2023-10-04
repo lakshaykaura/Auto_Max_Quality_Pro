@@ -1,28 +1,48 @@
 {
     "manifest_version": 3,
     "name": "YouTube Max Quality Switcher",
-    "version": "1.0",
+    "version": "1.1",
     "description": "Automatically switches YouTube videos to the highest available quality.",
     "permissions": [
+        "storage",
         "activeTab",
-        "https://www.youtube.com/*"
+        "https://www.youtube.com/*",
+        "https://youtu.be/*"
     ],
     "content_scripts": [
         {
             "matches": [
-                "https://www.youtube.com/*"
+                "https://www.youtube.com/*",
+                "https://youtu.be/*"
             ],
             "js": [
+                "jquery-3.6.0.min.js",
                 "script.js"
             ]
         }
     ],
+    "content_security_policy": {
+        "extension_pages": "script-src 'self'; object-src 'self';"
+    },
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "bootstrap_4.5.2_css_bootstrap.min.css"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ],
     "icons": {
-        "48": "icon.png"
+        "48": "icon48.png"
     },
     "action": {
         "default_icon": {
-            "48": "icon.png"
-        }
+            "16": "icon16.png",
+            "48": "icon48.png",
+            "128": "icon128.png"
+        },
+        "default_popup": "popup.html"
     }
 }
