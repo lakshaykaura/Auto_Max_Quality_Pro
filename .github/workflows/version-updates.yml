@@ -71,4 +71,6 @@ jobs:
           git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/lakshaykaura/Yt_Max_Quality_Switcher.git
           git add manifest.json
           git commit -m "Artifact version bumped to ${{ env.NEW_ARTIFACT_VERSION }} in manifest.json" # Use env variable here for the NEW_ARTIFACT_VERSION
-          git push
+          # Printing branch name
+          echo "Branch Name: ${{ github.ref }}"
+          git push origin HEAD:${{ github.ref }}
