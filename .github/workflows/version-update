@@ -1,0 +1,44 @@
+name: Version Updates
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Determine version bump
+        id: determine-version
+        run: |
+          COMMIT_MSG=$(git log --format=%B -n 1)
+if [[ $COMMIT_MSG == *"Major Update: "* ]]; then
+            echo "Major Update"
+            echo "::set-output name=bump::major"
+elif [[ $COMMIT_MSG == *"Minor Update: "* ]]; then
+            echo "Minor Update"
+            echo "::set-output name=bump::minor"
+          else
+            echo "No version update"
+            echo "::set-output name=bump::none"
+          fi
+
+      - name: Update manifest.json
+        if: steps.determine-version.outputs.bump != 'none'
+        run: |
+          # Use a script to update the version in manifest.json based on the bump type.
+          # Replace 'version' in manifest.json with the new version.
+
+      - name: Commit manifest.json
+        if: steps.determine-version.outputs.bump != 'none'
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add manifest.json
+          git commit -m "Version bump"
+          git push
