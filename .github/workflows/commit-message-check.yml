@@ -1,0 +1,34 @@
+name: Commit Message Check
+
+on:
+  push:
+    branches:
+      - '*'  # Run on all branches
+
+jobs:
+  check-commit-messages:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check Commit Messages
+        run: |
+          COMMIT_MESSAGES=$(git log --format=%s ${{ github.event.before }}..${{ github.event.after }})
+
+          # Define the required patterns
+          REQUIRED_PATTERNS=("Major Update: " "Minor Update: " "Documentation Update: " "Bug Fix: " "Security Fix: " "Build: " "CI: " "Revert: " "Release: " "Merge: " "Hotfix: " "New Feature: " "Improvement: " "Performance: " "Style: " "WIP: ")
+
+          # Set a flag to indicate if a valid pattern was found
+          PATTERN_FOUND=false
+
+          # Check if any of the required patterns exist in commit messages
+          for PATTERN in "${REQUIRED_PATTERNS[@]}"; do
+            if [[ $COMMIT_MESSAGES == *"$PATTERN"* ]]; then
+              PATTERN_FOUND=true
+              break
+            fi
+          done
+
+          if [ "$PATTERN_FOUND" = false ]; then
+            echo "error: Commit message does not contain any of the required patterns. Please include one."
+            exit 1
+          fi
