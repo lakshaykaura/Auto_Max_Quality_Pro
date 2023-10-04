@@ -65,10 +65,11 @@ jobs:
 
       - name: Commit manifest.json
         if: env.bump != 'none'
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/lakshaykaura/Yt_Max_Quality_Switcher.git
-          git add manifest.json
-          git commit -m "Artifact version bumped to ${{ env.NEW_ARTIFACT_VERSION }} in manifest.json"
-          git push origin HEAD:${{ github.ref }}
+        uses: EndBug/add-and-commit@v7
+        with:
+          author_name: 'GitHub Actions'
+          author_email: 'actions@github.com'
+          message: "Artifact version bumped to ${{ env.NEW_ARTIFACT_VERSION }} in manifest.json"
+          path: manifest.json
+          branch: ${{ github.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
