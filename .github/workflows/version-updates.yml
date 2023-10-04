@@ -35,7 +35,7 @@ jobs:
       - name: Install GitHub CLI
         uses: cli/cli-action@v1
         with:
-          token: ${{ secrets.github_token }}        
+          token: ${{ secrets.github_token }}
           
       - name: Determine version bump
         id: determine-version
