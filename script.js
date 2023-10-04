@@ -10,8 +10,9 @@ window.checkAndAdjustYouTubeVideoQuality = function (interval) {
     let timer = null;
 
     function getYouTubeTitle() {
-        if (window.location.host.includes('youtube.com')) {
-            let title = document.title.replace(' - YouTube', '');
+        let doc = window.self !== window.top ? window.document : window.top.document;
+        if (window.location.host.includes('youtube.com') || (doc?.title?.includes('YouTube'))) {
+            let title = doc.title.replace(' - YouTube', '');
             return title.replace(/^\(\d+\)\s/, '');
         }
         return null;

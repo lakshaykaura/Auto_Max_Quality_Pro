@@ -1,24 +1,23 @@
 {
     "manifest_version": 3,
     "name": "YouTube Max Quality Switcher",
-    "version": "1.0",
+    "version": "1.1",
     "description": "Automatically switches YouTube videos to the highest available quality.",
     "permissions": [
         "storage",
         "activeTab",
-        "https://www.youtube.com/*",
-        "https://youtu.be/*"
+        "<all_urls>"
     ],
     "content_scripts": [
         {
             "matches": [
-                "https://www.youtube.com/*",
-                "https://youtu.be/*"
+                "<all_urls>"
             ],
             "js": [
                 "jquery-3.6.0.min.js",
                 "script.js"
-            ]
+            ],
+            "all_frames": true
         }
     ],
     "content_security_policy": {
