@@ -27,7 +27,7 @@ jobs:
           elif [[ $COMMIT_MSG == *("Major Update: "*|"New Feature: "*|"Improvement: "*|"Performance: "*|"Bug Fix: "*|"Security Fix: "*|"Hotfix: "*) ]]; then
             echo "Bumping Minor Version"
             echo "bump=minor" >> $GITHUB_ENV
-          elif [[ $COMMIT_MSG == *("Minor Update: "*|"Documentation Update: "*|"Build: "*|"CI: "*|"Revert: "*|"Merge: "*|"Style: "*) ]]; then
+          elif [[ $COMMIT_MSG == *("Minor Update: "*|"Documentation Update: "*|"Build: "*|"CI: "*|"Revert "*|"Merge "*|"Style: "*) ]]; then
             echo "Bumping Patch Version"
             echo "bump=patch" >> $GITHUB_ENV
           else

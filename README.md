@@ -13,9 +13,9 @@ To ensure consistency across commits and facilitate automation tasks, such as au
 - `Security Fix: ` - Addresses a security risk.
 - `Build: ` - Pertains to the build process.
 - `CI: ` - Refers to the Continuous Integration process modifications.
-- `Revert: ` - Reverses a previous commit.
+- `Revert ` - Reverses a previous commit.
 - `Release: ` - Signifies a new release.
-- `Merge: ` - Involves merging branches.
+- `Merge ` - Involves merging branches.
 - `Hotfix: ` - Quick solutions for pressing issues.
 - `New Feature: ` - Adds entirely new functionality.
 - `Improvement: ` - Enhances current functionalities.
@@ -45,8 +45,6 @@ Our repository employs a GitHub Actions workflow that automates versioning withi
   - `Documentation Update: `
   - `Build: `
   - `CI: `
-  - `Revert: `
-  - `Merge: `
   - `Style: `
 
 By automating the versioning process, we can consistently maintain version records, decrease the potential for human errors, and offer a clear understanding of the changes and their significance in each release. When contributing, it's essential to ensure that your commit messages align with the provided guidelines, enabling the correct version bump to occur.
