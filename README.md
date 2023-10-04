@@ -25,10 +25,29 @@ To ensure consistency and aid in automation (like auto version bumping), we have
 
 ## Automated Versioning
 
-We utilize a GitHub Actions workflow to automatically handle version bumping in our `manifest.json` based on the commit messages. The process is as follows:
+Our repository uses a GitHub Actions workflow to automate version bumping in our `manifest.json` based on the patterns detected in the commit messages. Here's how the versioning automation works:
 
-- A commit with the `Release: ` keyword will bump the major version (e.g., `1.x` to `2.x`).
-- Commits with keywords like `Major Update: `, `New Feature: `, etc., will bump the minor version (e.g., `1.1` to `1.2`).
-- Commits with keywords like `Minor Update: `, `Documentation Update: `, etc., will bump the patch version (e.g., `1.1.1` to `1.1.2`).
+- **Major Version Bump (e.g., `1.x.y` to `2.0.0`)**: Triggered by commit messages containing the `Release: ` keyword.
+
+- **Minor Version Bump (e.g., `1.1.y` to `1.2.0`)**:
+  - `Major Update: `: Indicates substantial changes or enhancements.
+  - `New Feature: `: Introduces completely new functionality to the extension.
+  - `Improvement: `: Enhancements to existing features without adding entirely new ones.
+  - `Performance: `: Changes that optimize the extension's performance.
+  - `Bug Fix: `: Resolves a bug or unexpected behavior in the extension.
+  - `Security Fix: `: Addresses vulnerabilities to improve the extension's security.
+  - `Hotfix: `: Quick patches to resolve urgent, impactful issues.
+
+- **Patch Version Bump (e.g., `1.1.1` to `1.1.2`)**:
+  - `Minor Update: `: Less significant changes or tweaks.
+  - `Documentation Update: `: Changes strictly related to documentation.
+  - `Build: `: Updates or changes related to the build process.
+  - `CI: `: Modifications concerning the Continuous Integration setup.
+  - `Revert: `: Rolling back a previous commit.
+  - `Merge: `: Merging branches, typically from pull requests.
+  - `Style: `: Cosmetic or stylistic code changes, no functional impact.
+  - `WIP: `: Temporary commits for work in progress, typically not used in the main branch.
+
+This automation helps in maintaining consistency in versioning, reducing manual error, and providing clarity about the nature and significance of changes in each release. When contributing, ensure your commit messages align with the above guidelines to correctly trigger the desired version bump.
 
 Please adhere to these guidelines to ensure smooth automation and clear commit history.
