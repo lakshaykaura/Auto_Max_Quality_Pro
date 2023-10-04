@@ -64,13 +64,10 @@ jobs:
           mv manifest_updated.json manifest.json
 
       - name: Commit manifest.json
-        if: env.bump != 'none' # Use env here instead of steps.determine-version.outputs
+        if: env.bump != 'none'
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/lakshaykaura/Yt_Max_Quality_Switcher.git
           git add manifest.json
-          git commit -m "Artifact version bumped to ${{ env.NEW_ARTIFACT_VERSION }} in manifest.json" # Use env variable here for the NEW_ARTIFACT_VERSION
-          # Printing branch name
-          echo "Branch Name: ${{ github.ref }}"
+          git commit -m "Artifact version bumped to ${{ env.NEW_ARTIFACT_VERSION }} in manifest.json"
           git push origin HEAD:${{ github.ref }}
