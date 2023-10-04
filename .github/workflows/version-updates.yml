@@ -33,9 +33,18 @@ jobs:
           fi
 
       - name: Install GitHub CLI
+<<<<<<< HEAD
         uses: cli/cli-action@v1
         with:
           token: ${{ secrets.github_token }}        
+=======
+        run: |
+          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+          sudo apt-add-repository https://cli.github.com/packages
+          sudo apt update
+          sudo apt install gh      
+          gh auth login --with-token <<< "${{ secrets.github_token }}"
+>>>>>>> 7249ea2 (Develop (#3))
           
       - name: Determine version bump
         id: determine-version
