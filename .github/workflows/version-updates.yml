@@ -6,10 +6,14 @@ on:
     branches:
       - master
 
+concurrency: 
+  group: version-bump
+  cancel-in-progress: true
+
 jobs:
   update-version:
     if: github.event.pull_request.merged == true
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     permissions: write-all
     steps:
 
@@ -34,7 +38,7 @@ jobs:
           sudo apt-add-repository https://cli.github.com/packages
           sudo apt update
           sudo apt install gh      
-          gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
+          gh auth login --with-token <<< "${{ secrets.github_token }}"
           
 
       - name: Determine version bump
