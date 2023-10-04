@@ -39,7 +39,7 @@ Our repository employs a GitHub Actions workflow that automates versioning withi
   - `Security Fix: `
   - `Hotfix: `
 
-- **Patch Version Bump (e.g., `1.1.1` to `1.1.2`)**:
+- **Patch Version Bump (e.g., `1.2.10` to `1.2.11`)**:
   Triggered by other commit messages such as:
   - `Minor Update: `
   - `Documentation Update: `
