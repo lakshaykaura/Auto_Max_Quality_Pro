@@ -1,4 +1,12 @@
 document.addEventListener('DOMContentLoaded', function () {
+    var donateBtn = document.getElementById('donateBtn');
+    if (donateBtn) {
+        donateBtn.addEventListener('click', function () {
+            var qrCode = document.getElementById('donate-qr');
+            qrCode.style.display = qrCode.style.display === 'block' ? 'none' : 'block';
+        });
+    }
+
     // Load saved interval when popup opens
     chrome.storage.sync.get('checkInterval', function (data) {
         let interval = data.checkInterval || 15000;
