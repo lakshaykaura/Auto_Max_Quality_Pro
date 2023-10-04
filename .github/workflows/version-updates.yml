@@ -1,15 +1,25 @@
 name: Version Updates
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches:
-      - develop
+      - master
 
 jobs:
   update-version:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
+      - name: Check for [auto-bump] in commit message
+        run: |
+          COMMIT_MSG=$(git log --format=%B -n 1)
+          if [[ $COMMIT_MSG == *"[auto-bump]"* ]]; then
+            echo "[auto-bump] detected in commit message. Exiting workflow."
+            exit 78
+          fi
+
       - name: Checkout code
         uses: actions/checkout@v4
         with:
@@ -17,24 +27,38 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.ref }}
 
+      - name: Install GitHub CLI
+        run: |
+          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+          sudo apt-add-repository https://cli.github.com/packages
+          sudo apt update
+          sudo apt install gh      
+          gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
+          
+
       - name: Determine version bump
         id: determine-version
         run: |
           COMMIT_MSG=$(git log --format=%B -n 1)
-          if [[ $COMMIT_MSG == *"Release: "* ]]; then
-            echo "Bumping Major Version"
-            echo "bump=major" >> $GITHUB_ENV
-          elif [[ $COMMIT_MSG == *("Major Update: "*|"New Feature: "*|"Improvement: "*|"Performance: "*|"Bug Fix: "*|"Security Fix: "*|"Hotfix: "*) ]]; then
-            echo "Bumping Minor Version"
-            echo "bump=minor" >> $GITHUB_ENV
-          elif [[ $COMMIT_MSG == *("Minor Update: "*|"Documentation Update: "*|"Build: "*|"CI: "*|"Revert "*|"Merge "*|"Style: "*) ]]; then
-            echo "Bumping Patch Version"
-            echo "bump=patch" >> $GITHUB_ENV
-          else
-            echo "No version update"
-            echo "bump=none" >> $GITHUB_ENV
+          BUMP="none"
+          if [[ $COMMIT_MSG == "Merge pull request #"* ]]; then
+            PR_NUMBER=$(echo $COMMIT_MSG | grep -o '#[0-9]\+' | grep -o '[0-9]\+')
+            COMMIT_MSGS=$(gh pr view $PR_NUMBER --json commits -q ".commits[].commit.message")
+      
+            echo "$COMMIT_MSGS" | while IFS= read -r msg; do
+              if [[ $msg == *"Release: "* ]]; then
+                BUMP="major"
+                break
+              elif [[ $msg == *("Major Update: "*|"New Feature: "*|"Improvement: "*|"Performance: "*|"Bug Fix: "*|"Security Fix: "*|"Hotfix: "*) ]]; then
+                BUMP="minor"
+              elif [[ $BUMP != "minor" && $msg == *("Minor Update: "*|"Documentation Update: "*|"Build: "*|"CI: "*|"Revert "*|"Merge "*|"Style: "*) ]]; then
+                BUMP="patch"
+              fi
+            done
           fi
-
+      
+          echo "Bump: $BUMP"
+          echo "bump=$BUMP" >> $GITHUB_ENV
 
       - name: Update manifest.json
         if: env.bump != 'none' # Use env here instead of steps.determine-version.outputs
@@ -72,5 +96,5 @@ jobs:
           git config user.email "actions@github.com"
           git remote set-url origin https://${{ secrets.github_token }}@github.com/lakshaykaura/Yt_Max_Quality_Switcher.git
           git add manifest.json
-          git commit -m "Artifact version bumped to ${{ env.NEW_ARTIFACT_VERSION }} in manifest.json" # Use env variable here for the NEW_ARTIFACT_VERSION
+          git commit -m "Artifact version bumped to ${{ env.NEW_ARTIFACT_VERSION }} in manifest.json [auto-bump]" # Use env variable here for the NEW_ARTIFACT_VERSION
           git push origin HEAD:${{ github.ref }}
