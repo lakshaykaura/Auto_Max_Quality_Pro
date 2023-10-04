@@ -66,9 +66,9 @@ jobs:
       - name: Commit manifest.json
         if: env.bump != 'none' # Use env here instead of steps.determine-version.outputs
         run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
           git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/lakshaykaura/Yt_Max_Quality_Switcher.git
           git add manifest.json
           git commit -m "Artifact version bumped to ${{ env.NEW_ARTIFACT_VERSION }} in manifest.json" # Use env variable here for the NEW_ARTIFACT_VERSION
-          git push origin HEAD:${{ github.ref }}
+          git push
