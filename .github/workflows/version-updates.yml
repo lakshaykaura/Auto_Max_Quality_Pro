@@ -8,10 +8,11 @@ on:
 jobs:
   update-version:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }} # Make sure the token is used for checkout
 
       - name: Determine version bump
         id: determine-version
@@ -61,4 +62,4 @@ jobs:
           git config user.email "actions@github.com"
           git add manifest.json
           git commit -m "Version bump"
-          git push
+          git push origin HEAD:${{ github.ref }}
