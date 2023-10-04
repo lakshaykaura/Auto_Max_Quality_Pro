@@ -8,11 +8,12 @@ on:
 jobs:
   update-version:
     runs-on: ubuntu-latest
+    permissions: write-all
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.github_token }}
           fetch-depth: 0
           ref: ${{ github.ref }}
 
@@ -65,11 +66,11 @@ jobs:
           mv manifest_updated.json manifest.json
 
       - name: Commit manifest.json
-        if: env.bump != 'none'
-        uses: EndBug/add-and-commit@v9
-        with:
-          author_name: 'GitHub Actions'
-          author_email: 'actions@github.com'
-          message: "Artifact version bumped to ${{ env.NEW_ARTIFACT_VERSION }} in manifest.json"
-          add: manifest.json
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+        if: env.bump != 'none' # Use env here instead of steps.determine-version.outputs
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git remote set-url origin https://${{ secrets.github_token }}@github.com/lakshaykaura/Yt_Max_Quality_Switcher.git
+          git add manifest.json
+          git commit -m "Artifact version bumped to ${{ env.NEW_ARTIFACT_VERSION }} in manifest.json" # Use env variable here for the NEW_ARTIFACT_VERSION
+          git push origin HEAD:${{ github.ref }}
