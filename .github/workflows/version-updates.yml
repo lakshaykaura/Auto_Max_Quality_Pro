@@ -100,11 +100,25 @@ jobs:
           mv manifest_updated.json manifest.json
 
       - name: Commit manifest.json
-        if: env.bump != 'none' # Use env here instead of steps.determine-version.outputs
+        if: env.bump != 'none'
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git remote set-url origin https://${{ secrets.github_token }}@github.com/lakshaykaura/Yt_Max_Quality_Switcher.git
+          
+          # Create a new branch
+          BRANCH_NAME="auto-bump-$(date +'%Y%m%d%H%M%S')"
+          git checkout -b $BRANCH_NAME
+      
+          # Commit the changes
           git add manifest.json
-          git commit -m "Artifact version bumped to ${{ env.NEW_ARTIFACT_VERSION }} in manifest.json [auto-bump]" # Use env variable here for the NEW_ARTIFACT_VERSION
-          git push origin HEAD:${{ github.ref }}
+          git commit -m "Artifact version bumped to ${{ env.NEW_ARTIFACT_VERSION }} in manifest.json [auto-bump]"
+          
+          # Push the changes to the new branch
+          git push origin $BRANCH_NAME
+      
+          # Create a PR using the GitHub CLI
+          gh pr create --base master --head $BRANCH_NAME --title "Auto-bump version" --body "Automatically bumped version to ${{ env.NEW_ARTIFACT_VERSION }}"
+      
+          # OPTIONAL: If you want to automatically merge the PR (ensure you have appropriate permissions)
+          PR_NUMBER=$(gh pr view --json number -q ".number")
+          gh pr merge $PR_NUMBER --merge --delete-branch
