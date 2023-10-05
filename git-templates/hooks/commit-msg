@@ -17,6 +17,6 @@ for PATTERN in "${REQUIRED_PATTERNS[@]}"; do
 done
 
 if [[ $PATTERN_FOUND -eq 0 ]]; then
-    echo "error: Commit message does not contain any of the required patterns. Please include one."
+    echo "error: Commit message: '$COMMIT_MSG' does not contain any of the required patterns. Please include one."
     exit 1
 fi
