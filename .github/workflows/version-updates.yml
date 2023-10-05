@@ -45,24 +45,30 @@ jobs:
         run: |
           COMMIT_MSG=$(git log --format=%B -n 1)
           BUMP="none"
+          TMP_BUMP_FILE=bump.txt
           if [[ $COMMIT_MSG == "Merge pull request #"* ]]; then
             PR_NUMBER=$(echo $COMMIT_MSG | grep -o '#[0-9]\+' | grep -o '[0-9]\+')
             COMMIT_MSGS=$(gh pr view $PR_NUMBER --json commits -q ".commits[].commit.message")
-      
+          
             echo "$COMMIT_MSGS" | while IFS= read -r msg; do
               if [[ $msg == *"Release: "* ]]; then
-                BUMP="major"
+                echo "major" > $TMP_BUMP_FILE
                 break
               elif [[ $msg == *("Major Update: "*|"New Feature: "*|"Improvement: "*|"Performance: "*|"Bug Fix: "*|"Security Fix: "*|"Hotfix: "*) ]]; then
-                BUMP="minor"
-              elif [[ $BUMP != "minor" && $msg == *("Minor Update: "*|"Documentation Update: "*|"Build: "*|"CI: "*|"Revert "*|"Merge "*|"Style: "*) ]]; then
-                BUMP="patch"
+                echo "minor" > $TMP_BUMP_FILE
+              elif [[ ! -f $TMP_BUMP_FILE && $msg == *("Minor Update: "*|"Documentation Update: "*|"Build: "*|"CI: "*|"Revert "*|"Merge "*|"Style: "*) ]]; then
+                echo "patch" > $TMP_BUMP_FILE
               fi
             done
+            
+            if [[ -f $TMP_BUMP_FILE ]]; then
+              BUMP=$(cat $TMP_BUMP_FILE)
+              rm $TMP_BUMP_FILE
+            fi
           fi
-      
+          
           echo "Bump: $BUMP"
-          echo "bump=$BUMP" >> $GITHUB_ENV
+          echo "bump=$BUMP" >> $GITHUB_ENV        
 
       - name: Update manifest.json
         if: env.bump != 'none' # Use env here instead of steps.determine-version.outputs
