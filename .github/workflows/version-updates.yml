@@ -44,14 +44,15 @@ jobs:
         id: determine-version
         run: |
           COMMIT_MSG=$(git log --format=%B -n 1)
-
-          echo "Commit Message: $COMMIT_MSG"
-          echo "PR Number: $PR_NUMBER"
           
           BUMP="none"
           TMP_BUMP_FILE=bump.txt
           if [[ $COMMIT_MSG == "Merge pull request #"* ]]; then
             PR_NUMBER=$(echo $COMMIT_MSG | grep -o '#[0-9]\+' | grep -o '[0-9]\+')
+
+            echo "Commit Message: $COMMIT_MSG"
+            echo "PR Number: $PR_NUMBER"
+            
             COMMIT_MSGS=$(gh pr view $PR_NUMBER --json commits -q ".commits[].commit.message")
           
             echo "$COMMIT_MSGS" | while IFS= read -r msg; do
