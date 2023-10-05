@@ -71,7 +71,7 @@ jobs:
           echo "bump=$BUMP" >> $GITHUB_ENV        
 
       - name: Update manifest.json
-        if: env.bump != 'none' # Use env here instead of steps.determine-version.outputs
+        if: env.bump != 'none'
         run: |
           sudo apt-get install -y jq
           
