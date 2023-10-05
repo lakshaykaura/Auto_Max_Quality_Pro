@@ -2,7 +2,7 @@ name: Version Updates
 
 on:
   pull_request:
-    types: [opened, synchronize, closed]
+    types: [closed]
     branches:
       - master
 
@@ -12,6 +12,7 @@ concurrency:
 
 jobs:
   update-version:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-20.04
     permissions: write-all
     steps:
@@ -21,7 +22,7 @@ jobs:
         with:
           token: ${{ secrets.github_token }}
           fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.ref }}
+          ref: ${{ github.ref }}
 
       - name: Check for [auto-bump] in commit message
         run: |
@@ -70,7 +71,7 @@ jobs:
           echo "bump=$BUMP" >> $GITHUB_ENV        
 
       - name: Update manifest.json
-        if: env.bump != 'none' # Use env here instead of steps.determine-version.outputs
+        if: env.bump != 'none'
         run: |
           sudo apt-get install -y jq
           
@@ -106,22 +107,4 @@ jobs:
           git remote set-url origin https://${{ secrets.github_token }}@github.com/lakshaykaura/Yt_Max_Quality_Switcher.git
           git add manifest.json
           git commit -m "Artifact version bumped to ${{ env.NEW_ARTIFACT_VERSION }} in manifest.json [auto-bump]"
-          git push origin HEAD:${{ github.event.pull_request.head.ref }}
-
-
-  revert-version-bump:
-    if: github.event.pull_request.merged == false && contains(github.event.pull_request.title, '[auto-bump]')
-    runs-on: ubuntu-20.04
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-
-    - name: Revert the auto-bump commit
-      run: |
-        git config user.name "GitHub Actions"
-        git config user.email "actions@github.com"
-        git remote set-url origin https://${{ secrets.github_token }}@github.com/lakshaykaura/Yt_Max_Quality_Switcher.git
-        git revert HEAD
-        git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          git push origin HEAD:${{ github.ref }}
