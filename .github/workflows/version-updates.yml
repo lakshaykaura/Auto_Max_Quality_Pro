@@ -100,7 +100,7 @@ jobs:
           mv manifest_updated.json manifest.json
 
       - name: Commit manifest.json
-        if: env.bump != 'none' # Use env here instead of steps.determine-version.outputs
+        if: env.bump != 'none'
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
