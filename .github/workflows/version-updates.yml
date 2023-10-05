@@ -125,4 +125,3 @@ jobs:
         git remote set-url origin https://${{ secrets.github_token }}@github.com/lakshaykaura/Yt_Max_Quality_Switcher.git
         git revert HEAD
         git push origin HEAD:${{ github.event.pull_request.head.ref }}
-          
