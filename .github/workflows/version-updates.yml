@@ -106,5 +106,5 @@ jobs:
           git config user.email "actions@github.com"
           git remote set-url origin https://${{ secrets.github_token }}@github.com/lakshaykaura/Yt_Max_Quality_Switcher.git
           git add manifest.json
-          git commit -m "Artifact version bumped to ${{ env.NEW_ARTIFACT_VERSION }} in manifest.json [auto-bump]" # Use env variable here for the NEW_ARTIFACT_VERSION
+          git commit -m "Artifact version bumped to ${{ env.NEW_ARTIFACT_VERSION }} in manifest.json [auto-bump]"
           git push origin HEAD:${{ github.ref }}
