@@ -20,8 +20,8 @@ document.addEventListener('DOMContentLoaded', function () {
             messageDiv.style.display = "block";
 
             setTimeout(() => {
-                window.close(); // Simply close the popup after 3 seconds
-            }, 3000); // Wait 3 seconds before closing
+                window.close();
+            }, 3000);
         });
     });
 });

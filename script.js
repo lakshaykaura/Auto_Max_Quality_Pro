@@ -54,6 +54,7 @@ window.checkAndAdjustYouTubeVideoQuality = function (interval) {
     const settingsButton = document.querySelector('button.ytp-settings-button');
     if (settingsButton) {
         settingsButton.addEventListener('click', function () {
+            console.log(`Clicked settings button for: ${getYouTubeTitle()}`);
             // Flag that the user interacted with the settings
             shouldAdjustQuality = true;
 
