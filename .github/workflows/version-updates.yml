@@ -40,59 +40,64 @@ jobs:
           sudo apt install -y gh
           gh auth login --with-token <<< "${{ secrets.github_token }}"
           
-      - name: Determine version bump
-        id: determine-version
-        run: |
-          COMMIT_MSG=$(git log --format=%B -n 1)
-          
-          BUMP="none"
-          TMP_BUMP_FILE=bump.txt
-          if [[ $COMMIT_MSG == "Merge pull request #"* ]]; then
-            PR_NUMBER=$(echo $COMMIT_MSG | grep -o '#[0-9]\+' | grep -o '[0-9]\+')
-      
-            echo "Commit Message: $COMMIT_MSG"
-            echo "PR Number: $PR_NUMBER"
+          - name: Determine version bump
+          id: determine-version
+          run: |
+            COMMIT_MSG=$(git log --format=%B -n 1)
             
-            COMMIT_MSGS=$(gh pr view $PR_NUMBER --json commits -q ".commits[].commit.message")
-          
-            echo "$COMMIT_MSGS" | while IFS= read -r msg; do
-              # Debug echo
-              echo "Processing commit message: '$msg'"
+            BUMP="none"
+            TMP_BUMP_FILE=bump.txt
+            if [[ $COMMIT_MSG == "Merge pull request #"* ]]; then
+              PR_NUMBER=$(echo $COMMIT_MSG | grep -o '#[0-9]\+' | grep -o '[0-9]\+')
+        
+              echo "Commit Message: $COMMIT_MSG"
+              echo "PR Number: $PR_NUMBER"
               
-              # Remove all whitespaces
-              msg=$(echo "$msg" | tr -d '[:space:]')
-              
-              # Check if the message starts with "Revert" and extract the original commit message.
-              if [[ $msg == Revert* ]]; then
-                  msg="${msg#Revert \"}" # Remove "Revert " prefix
-                  msg="${msg%\"}"        # Remove trailing double quote
-              fi
-              echo "Checking for major release..."
-              if [[ $msg == *"Release: "* ]]; then
-                  echo "major" > $TMP_BUMP_FILE
-                  break
-              else
-                  echo "Checking for minor release..."
-                  if [[ $msg == "Major Update: "* || $msg == "New Feature: "* || $msg == "Improvement: "* || $msg == "Performance: "* || $msg == "Bug Fix: "* || $msg == "Security Fix: "* || $msg == "Hotfix: "* ]]; then
-                      echo "minor" > $TMP_BUMP_FILE
-                  elif [[ ! -f $TMP_BUMP_FILE ]]; then
-                    echo "Checking for patch..."
-                    if [[ $msg == "Minor Update: "* ]] || [[ $msg == "Documentation Update: "* ]] || [[ $msg == "Build: "* ]] || [[ $msg == "CI: "* ]] || [[ $msg == "Style: "* ]]; then
-                        echo "patch" > $TMP_BUMP_FILE
+              COMMIT_MSGS=$(gh pr view $PR_NUMBER --json commits -q ".commits[].commit.message")
+            
+              echo "$COMMIT_MSGS" | while IFS= read -r msg; do
+                if [ -z "$msg" ]; then
+                  continue  # Skip empty commit messages
+                fi
+                
+                # Debug echo
+                echo "Processing commit message: '$msg'"
+                
+                # Remove all whitespaces
+                msg=$(echo "$msg" | tr -d '[:space:]')
+                
+                # Check if the message starts with "Revert" and extract the original commit message.
+                if [[ $msg == Revert* ]]; then
+                    msg="${msg#Revert \"}" # Remove "Revert " prefix
+                    msg="${msg%\"}"        # Remove trailing double quote
+                fi
+                
+                echo "Checking for major release..."
+                if [[ $msg == *"Release: "* ]]; then
+                    echo "major" > $TMP_BUMP_FILE
+                    break
+                else
+                    echo "Checking for minor release..."
+                    if [[ $msg == "Major Update: "* || $msg == "New Feature: "* || $msg == "Improvement: "* || $msg == "Performance: "* || $msg == "Bug Fix: "* || $msg == "Security Fix: "* || $msg == "Hotfix: "* ]]; then
+                        echo "minor" > $TMP_BUMP_FILE
+                    elif [[ ! -f $TMP_BUMP_FILE ]]; then
+                      echo "Checking for patch..."
+                      if [[ $msg == "Minor Update: "* ]] || [[ $msg == "Documentation Update: "* ]] || [[ $msg == "Build: "* ]] || [[ $msg == "CI: "* ]] || [[ $msg == "Style: "* ]]; then
+                          echo "patch" > $TMP_BUMP_FILE
+                      fi
                     fi
-                  fi
+                fi
+                echo "TMP_BUMP_FILE status: $( [[ -f $TMP_BUMP_FILE ]] && echo 'Created' || echo 'Still not created' )"
+              done
+              
+              if [[ -f $TMP_BUMP_FILE ]]; then
+                BUMP=$(cat $TMP_BUMP_FILE)
+                rm $TMP_BUMP_FILE
               fi
-              echo "TMP_BUMP_FILE status: $( [[ -f $TMP_BUMP_FILE ]] && echo 'Created' || echo 'Still not created' )"
-            done
-            
-            if [[ -f $TMP_BUMP_FILE ]]; then
-              BUMP=$(cat $TMP_BUMP_FILE)
-              rm $TMP_BUMP_FILE
             fi
-          fi
-          
-          echo "Bump: $BUMP"
-          echo "bump=$BUMP" >> $GITHUB_ENV
+            
+            echo "Bump: $BUMP"
+            echo "bump=$BUMP" >> $GITHUB_ENV
 
       - name: Update manifest.json
         if: env.bump != 'none'
