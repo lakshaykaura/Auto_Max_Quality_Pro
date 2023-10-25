@@ -54,6 +54,7 @@ jobs:
             echo "Raw Commit Messages: "
             echo "$COMMIT_MSG"
             echo ========================
+            echo
             echo "PR Number: $PR_NUMBER"
 
             MERGE_COMMIT_HASH=$(git log --merges --oneline -1 | awk '{print $1}')
@@ -62,13 +63,14 @@ jobs:
             MERGE_BASE=$(git merge-base $MERGE_COMMIT_HASH master)
         
             COMMIT_MSGS=$(git log $MERGE_COMMIT_HASH^..$MERGE_COMMIT_HASH --pretty=format:"%s")
-
-            echo "Fetched Commit Messages: "
+            echo
             echo ------------------------
+            echo "Fetched Commit Messages: "
             echo "$COMMIT_MSGS"
             echo ------------------------
             echo "$COMMIT_MSGS" | while IFS= read -r msg; do
-              
+              echo
+
               # Debug echo
               echo "Processing commit message: '$msg'"
               
@@ -93,7 +95,6 @@ jobs:
               elif [[ $msg == "Major Update: "* || $msg == "New Feature: "* || $msg == "Improvement: "* || $msg == "Performance: "* || $msg == "Bug Fix: "* || $msg == "Security Fix: "* || $msg == "Hotfix: "* ]]; then
                   echo "minor" > $TMP_BUMP_FILE
               elif [[ ! -f $TMP_BUMP_FILE ]]; then
-                echo "Checking for patch..."
                 if [[ $msg == "Minor Update: "* || $msg == "Documentation Update: "* || $msg == "Build: "* || $msg == "CI: "* || $msg == "Style: "* ]]; then
                     echo "patch" > $TMP_BUMP_FILE
                 fi
@@ -106,7 +107,8 @@ jobs:
               rm $TMP_BUMP_FILE
             fi
           fi
-          
+          echo
+          echo ">>>>>>>>>>>>>>>>>>>"
           echo "Bump: $BUMP"
           echo "bump=$BUMP" >> $GITHUB_ENV
 
