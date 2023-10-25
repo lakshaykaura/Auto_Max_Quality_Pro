@@ -56,15 +56,17 @@ jobs:
             COMMIT_MSGS=$(gh pr view $PR_NUMBER --json commits -q ".commits[].commit.message")
           
             echo "$COMMIT_MSGS" | while IFS= read -r msg; do
-              if [ -z "$msg" ]; then
-                continue  # Skip empty commit messages
-              fi
               
               # Debug echo
               echo "Processing commit message: '$msg'"
               
               # Remove all whitespaces
               msg=$(echo "$msg" | tr -d '[:space:]')
+              
+              # Skip empty commit messages
+              if [ -z "$msg" ]; then
+                continue
+              fi
               
               # Check if the message starts with "Revert" and extract the original commit message.
               if [[ $msg == Revert* ]]; then
