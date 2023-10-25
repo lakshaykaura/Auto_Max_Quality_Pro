@@ -66,10 +66,10 @@ jobs:
                 break
               elif [[ $msg == "Major Update: "* || $msg == "New Feature: "* || $msg == "Improvement: "* || $msg == "Performance: "* || $msg == "Bug Fix: "* || $msg == "Security Fix: "* || $msg == "Hotfix: "* ]]; then
                 echo "minor" > $TMP_BUMP_FILE
-              echo "TMP_BUMP_FILE status: $( [[ -f $TMP_BUMP_FILE ]] && echo 'Exists' || echo 'Not Found' )"
-              if [[ ! -f $TMP_BUMP_FILE && ($msg == "Minor Update: "* || $msg == "Documentation Update: "* || $msg == "Build: "* || $msg == "CI: "* || $msg == "Style: "* ) ]]; then
+              elif [[ ! -f $TMP_BUMP_FILE && ($msg == "Minor Update: "* || $msg == "Documentation Update: "* || $msg == "Build: "* || $msg == "CI: "* || $msg == "Style: "* ) ]]; then
                   echo "patch" > $TMP_BUMP_FILE
               fi
+              echo "TMP_BUMP_FILE status: $( [[ -f $TMP_BUMP_FILE ]] && echo 'Created' || echo 'Still not created' )"
             done
             
             if [[ -f $TMP_BUMP_FILE ]]; then
