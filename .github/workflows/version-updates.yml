@@ -54,7 +54,6 @@ jobs:
             echo "PR Number: $PR_NUMBER"
             
             COMMIT_MSGS=$(gh pr view $PR_NUMBER --json commits -q ".commits[].commit.message")
-    
             
             echo "$COMMIT_MSGS" | while IFS=$'\n' read -r msg; do
               
