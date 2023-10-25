@@ -51,22 +51,16 @@ jobs:
             PR_NUMBER=$(echo $COMMIT_MSG | grep -o '#[0-9]\+' | grep -o '[0-9]\+')
       
             echo "Commit Message: $COMMIT_MSG"
-            echo .
+            echo ========================
             echo "PR Number: $PR_NUMBER"
-            
-            COMMIT_MSGS=$(gh pr view $PR_NUMBER --json commits -q ".commits[].commit.message")
+            echo ========================
 
-            echo "All Commit Messages: $COMMIT_MSGS"
-
-            echo "$COMMIT_MSGS" | while IFS=$'\n' read -r msg; do
-              echo "IFS  1: Processing commit message: '$msg'"
-            done
-
-            echo "$COMMIT_MSGS" | while IFS= read -r msg; do
-              echo "IFS  2: Processing commit message: '$msg'"
-            done
-
-            COMMIT_MSGS=$(gh pr view $PR_NUMBER --json commits | jq -r '.commits[].commit.message')
+            MERGE_COMMIT_HASH=$(git log --merges --oneline -1 | awk '{print $1}')
+        
+            # Determine the merge base
+            MERGE_BASE=$(git merge-base $MERGE_COMMIT_HASH master)
+        
+            COMMIT_MSGS=$(git log $MERGE_COMMIT_HASH^..$MERGE_COMMIT_HASH --pretty=format:"%s")
 
             echo "All Commit Messages: $COMMIT_MSGS"
 
