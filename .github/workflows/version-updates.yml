@@ -49,11 +49,14 @@ jobs:
           TMP_BUMP_FILE=bump.txt
           if [[ $COMMIT_MSG == "Merge pull request #"* ]]; then
             PR_NUMBER=$(echo $COMMIT_MSG | grep -o '#[0-9]\+' | grep -o '[0-9]\+')
-      
-            echo "Commit Message: $COMMIT_MSG"
-            echo ========================
+            
+            echo "Raw Commit Messages: "
+            echo "$COMMIT_MSG"
+            echo
+            echo
             echo "PR Number: $PR_NUMBER"
-            echo ========================
+            echo
+            echo
 
             MERGE_COMMIT_HASH=$(git log --merges --oneline -1 | awk '{print $1}')
         
@@ -62,23 +65,17 @@ jobs:
         
             COMMIT_MSGS=$(git log $MERGE_COMMIT_HASH^..$MERGE_COMMIT_HASH --pretty=format:"%s")
 
-            echo "All Commit Messages: $COMMIT_MSGS"
-
-            echo "$COMMIT_MSGS" | while IFS=$'\n' read -r msg; do
-              echo "IFS  1: Processing commit message: '$msg'"
-            done
-
-            echo "$COMMIT_MSGS" | while IFS= read -r msg; do
-              echo "IFS  2: Processing commit message: '$msg'"
-            done
+            echo "Fetched Commit Messages: "
+            echo "$COMMIT_MSGS"
             
-            echo "$COMMIT_MSGS" | while IFS=$'\n' read -r msg; do
+            echo "$COMMIT_MSGS" | while IFS= read -r msg; do
               
               # Debug echo
               echo "Processing commit message: '$msg'"
               
               # Remove all whitespaces
               msg=$(echo "$msg" | tr -d '[:space:]')
+              echo "Trimmed commit message: '$msg'"
               
               # Skip empty commit messages
               if [ -z "$msg" ]; then
@@ -91,20 +88,16 @@ jobs:
                   msg="${msg%\"}"        # Remove trailing double quote
               fi
               
-              echo "Checking for major release..."
               if [[ $msg == *"Release: "* ]]; then
                   echo "major" > $TMP_BUMP_FILE
                   break
-              else
-                  echo "Checking for minor release..."
-                  if [[ $msg == "Major Update: "* || $msg == "New Feature: "* || $msg == "Improvement: "* || $msg == "Performance: "* || $msg == "Bug Fix: "* || $msg == "Security Fix: "* || $msg == "Hotfix: "* ]]; then
-                      echo "minor" > $TMP_BUMP_FILE
-                  elif [[ ! -f $TMP_BUMP_FILE ]]; then
-                    echo "Checking for patch..."
-                    if [[ $msg == "Minor Update: "* ]] || [[ $msg == "Documentation Update: "* ]] || [[ $msg == "Build: "* ]] || [[ $msg == "CI: "* ]] || [[ $msg == "Style: "* ]]; then
-                        echo "patch" > $TMP_BUMP_FILE
-                    fi
-                  fi
+              elif [[ $msg == "Major Update: "* || $msg == "New Feature: "* || $msg == "Improvement: "* || $msg == "Performance: "* || $msg == "Bug Fix: "* || $msg == "Security Fix: "* || $msg == "Hotfix: "* ]]; then
+                  echo "minor" > $TMP_BUMP_FILE
+              elif [[ ! -f $TMP_BUMP_FILE ]]; then
+                echo "Checking for patch..."
+                if [[ $msg == "Minor Update: "* || $msg == "Documentation Update: "* || $msg == "Build: "* || $msg == "CI: "* || $msg == "Style: "* ]]; then
+                    echo "patch" > $TMP_BUMP_FILE
+                fi
               fi
               echo "TMP_BUMP_FILE status: $( [[ -f $TMP_BUMP_FILE ]] && echo 'Created' || echo 'Still not created' )"
             done
