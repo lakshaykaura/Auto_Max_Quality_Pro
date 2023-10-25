@@ -57,8 +57,11 @@ jobs:
           
             echo "$COMMIT_MSGS" | while IFS= read -r msg; do
               # Debug echo
-              echo "Processing commit message: $msg"
-
+              echo "Processing commit message: '$msg'"
+              
+              # Remove all whitespaces
+              msg=$(echo "$msg" | tr -d '[:space:]')
+              
               # Check if the message starts with "Revert" and extract the original commit message.
               if [[ $msg == Revert* ]]; then
                   msg="${msg#Revert \"}" # Remove "Revert " prefix
