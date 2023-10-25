@@ -54,8 +54,8 @@ jobs:
             echo "PR Number: $PR_NUMBER"
             
             COMMIT_MSGS=$(gh pr view $PR_NUMBER --json commits -q ".commits[].commit.message")
-          
-            echo "$COMMIT_MSGS" | while IFS= read -r msg; do
+            
+            echo "$COMMIT_MSGS" | while IFS=$'\n' read -r msg; do
               
               # Debug echo
               echo "Processing commit message: '$msg'"
@@ -135,7 +135,7 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git remote set-url origin https://${{ secrets.github_token }}@github.com/lakshaykaura/Yt_Max_Quality_Switcher.git
+          git remote set-url origin https://${{ secrets.github_token }}@github.com/lakshaykaura/YouTube_Max_Quality_Switcher.git
           git add manifest.json
           git commit -m "Artifact version bumped to ${{ env.NEW_ARTIFACT_VERSION }} in manifest.json [auto-bump]"
           git push origin HEAD:${{ github.ref }}
