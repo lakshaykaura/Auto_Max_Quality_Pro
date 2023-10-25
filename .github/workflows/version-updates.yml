@@ -49,14 +49,12 @@ jobs:
           TMP_BUMP_FILE=bump.txt
           if [[ $COMMIT_MSG == "Merge pull request #"* ]]; then
             PR_NUMBER=$(echo $COMMIT_MSG | grep -o '#[0-9]\+' | grep -o '[0-9]\+')
-            
+
+            echo ========================
             echo "Raw Commit Messages: "
             echo "$COMMIT_MSG"
-            echo
-            echo
+            echo ========================
             echo "PR Number: $PR_NUMBER"
-            echo
-            echo
 
             MERGE_COMMIT_HASH=$(git log --merges --oneline -1 | awk '{print $1}')
         
@@ -66,15 +64,16 @@ jobs:
             COMMIT_MSGS=$(git log $MERGE_COMMIT_HASH^..$MERGE_COMMIT_HASH --pretty=format:"%s")
 
             echo "Fetched Commit Messages: "
+            echo ------------------------
             echo "$COMMIT_MSGS"
-            
+            echo ------------------------
             echo "$COMMIT_MSGS" | while IFS= read -r msg; do
               
               # Debug echo
               echo "Processing commit message: '$msg'"
               
               # Remove all whitespaces
-              msg=$(echo "$msg" | tr -d '[:space:]')
+              msg=$(echo "$msg" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
               echo "Trimmed commit message: '$msg'"
               
               # Skip empty commit messages
