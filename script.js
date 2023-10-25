@@ -5,6 +5,40 @@ function getIntervalAndRun() {
     });
 }
 
+function showSuccessMessage(selectedQuality, videoFrame) {
+    const successMessage = $('<div>', {
+        id: 'success-message',
+        class: 'success-message',
+        text: `"YouTube Max Quality Switcher" automatically switched quality to ${selectedQuality}`
+    }).css({
+        'position': 'absolute',
+        'top': '5%',
+        'left': '50%',
+        'transform': 'translate(-50%, -50%)',
+        'z-index': '9999',
+        'background': 'rgba(0, 0, 0, 0.8)',
+        'color': '#fff',
+        'padding': '10px',
+        'border-radius': '5px',
+        'opacity': '0',
+        'transition': 'opacity 1s'
+    });
+    if (videoFrame) {
+        $(videoFrame).append(successMessage);
+    }
+
+    setTimeout(() => {
+        successMessage.css('opacity', '0.6');
+        setTimeout(() => {
+            successMessage.css('opacity', '0');
+            setTimeout(() => {
+                successMessage.remove();
+            }, 500);
+        }, 1500);
+    }, 100);
+}
+
+
 window.checkAndAdjustYouTubeVideoQuality = function (interval) {
     let shouldAdjustQuality = false;
     let timer = null;
@@ -20,6 +54,7 @@ window.checkAndAdjustYouTubeVideoQuality = function (interval) {
 
     function adjustQuality() {
         let settingsButton = document.querySelector('button.ytp-settings-button');
+
         if (settingsButton && shouldAdjustQuality) {
             settingsButton.click();
 
@@ -32,6 +67,8 @@ window.checkAndAdjustYouTubeVideoQuality = function (interval) {
                         let availableQualities = document.querySelectorAll('.ytp-quality-menu .ytp-panel-menu[role="menu"] > .ytp-menuitem');
                         if (availableQualities.length > 0) {
                             availableQualities[0].click();
+                            let videoFrame = $(availableQualities).parents('div.html5-video-player')
+                            showSuccessMessage(availableQualities[0].innerText.trim(), videoFrame);
                             console.log(`Changed quality to ${availableQualities[0].innerText.trim()} for: ${getYouTubeTitle()}`);
                         }
 
