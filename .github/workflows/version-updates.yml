@@ -56,6 +56,10 @@ jobs:
             COMMIT_MSGS=$(gh pr view $PR_NUMBER --json commits -q ".commits[].commit.message")
           
             echo "$COMMIT_MSGS" | while IFS= read -r msg; do
+              if [ -z "$msg" ]; then
+                continue  # Skip empty commit messages
+              fi
+              
               # Debug echo
               echo "Processing commit message: '$msg'"
               
@@ -67,6 +71,7 @@ jobs:
                   msg="${msg#Revert \"}" # Remove "Revert " prefix
                   msg="${msg%\"}"        # Remove trailing double quote
               fi
+              
               echo "Checking for major release..."
               if [[ $msg == *"Release: "* ]]; then
                   echo "major" > $TMP_BUMP_FILE
