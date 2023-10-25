@@ -14,8 +14,8 @@
         "<all_urls>"
       ],
       "js": [
-        "jquery-3.6.0.min.js",
-        "script.js"
+        "./scripts/jquery-3.6.0.min.js",
+        "./scripts/script.js"
       ],
       "all_frames": true
     }
@@ -26,7 +26,7 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "bootstrap_4.5.2_css_bootstrap.min.css"
+        "./styles/bootstrap_4.5.2_css_bootstrap.min.css"
       ],
       "matches": [
         "<all_urls>"
@@ -34,16 +34,16 @@
     }
   ],
   "icons": {
-    "16": "icon16.png",
-    "48": "icon48.png",
-    "128": "icon128.png"
+    "16": "./media/icon16.png",
+    "48": "./media/icon48.png",
+    "128": "./media/icon128.png"
   },
   "action": {
     "default_icon": {
-      "16": "icon16.png",
-      "48": "icon48.png",
-      "128": "icon128.png"
+      "16": "./media/icon16.png",
+      "48": "./media/icon48.png",
+      "128": "./media/icon128.png"
     },
-    "default_popup": "popup.html"
+    "default_popup": "./html/popup.html"
   }
 }
