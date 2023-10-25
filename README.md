@@ -1,4 +1,4 @@
-# Yt_Max_Quality_Switcher
+# YouTube_Max_Quality_Switcher
 
 A browser extension designed to automatically switch YouTube videos to the highest available quality.
 
