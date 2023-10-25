@@ -94,7 +94,7 @@ jobs:
                     echo "patch" > $TMP_BUMP_FILE
                 fi
               fi
-              echo "TMP_BUMP_FILE status: $( [[ -f $TMP_BUMP_FILE ]] && echo 'Created' || echo 'Still not created' )"
+              echo "TMP_BUMP_FILE status: $( [[ -f $TMP_BUMP_FILE ]] && echo 'Created' || echo 'Still processing...' )"
             done
             
             if [[ -f $TMP_BUMP_FILE ]]; then
@@ -102,6 +102,7 @@ jobs:
               rm $TMP_BUMP_FILE
             fi
           fi
+          echo
           echo ========================
           echo "Final calculated version bump: $BUMP"
           echo "bump=$BUMP" >> $GITHUB_ENV
