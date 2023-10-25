@@ -2,6 +2,17 @@
 
 A browser extension designed to automatically switch YouTube videos to the highest available quality.
 
+## Directory Structure
+
+Here's an overview of the directory structure:
+
+- `media/`: Contains all the media files, including icons.
+- `content/scripts/`: Contains the JavaScript files.
+- `content/styles/`: Contains stylesheets.
+- `html/`: Contains the HTML files like `popup.html`.
+
+Please ensure that you place files in the appropriate directories when contributing.
+
 ## Commit Message Guidelines
 
 To ensure consistency across commits and facilitate automation tasks, such as auto-version bumping, we have established specific guidelines for commit messages. Each commit message should begin with one of the following keywords to accurately describe the nature of the update:
