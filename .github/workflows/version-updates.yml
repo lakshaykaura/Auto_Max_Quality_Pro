@@ -50,12 +50,12 @@ jobs:
           if [[ $COMMIT_MSG == "Merge pull request #"* ]]; then
             PR_NUMBER=$(echo $COMMIT_MSG | grep -o '#[0-9]\+' | grep -o '[0-9]\+')
 
+            echo "PR Number: $PR_NUMBER"
+            echo
             echo ========================
             echo "Raw Commit Messages: "
             echo "$COMMIT_MSG"
             echo ========================
-            echo
-            echo "PR Number: $PR_NUMBER"
 
             MERGE_COMMIT_HASH=$(git log --merges --oneline -1 | awk '{print $1}')
         
@@ -70,13 +70,10 @@ jobs:
             echo ------------------------
             echo "$COMMIT_MSGS" | while IFS= read -r msg; do
               echo
-
-              # Debug echo
-              echo "Processing commit message: '$msg'"
               
               # Remove all whitespaces
               msg=$(echo "$msg" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
-              echo "Trimmed commit message: '$msg'"
+              echo "Processing commit message after trimming: '$msg'"
               
               # Skip empty commit messages
               if [ -z "$msg" ]; then
@@ -108,8 +105,8 @@ jobs:
             fi
           fi
           echo
-          echo ">>>>>>>>>>>>>>>>>>>"
-          echo "Bump: $BUMP"
+          echo ">>>>>>>>>>>>>>>>>>>>>>>"
+          echo "final calculated Bump: $BUMP"
           echo "bump=$BUMP" >> $GITHUB_ENV
 
       - name: Update manifest.json
