@@ -1,6 +1,6 @@
 function getIntervalAndRun() {
     chrome.storage.sync.get('checkInterval', function (data) {
-        let interval = data.checkInterval || 15000;
+        let interval = data.checkInterval || 60000;
         window.checkAndAdjustYouTubeVideoQuality(interval);
     });
 }
