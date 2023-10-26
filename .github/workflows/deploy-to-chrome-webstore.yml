@@ -1,0 +1,27 @@
+name: Deploy to Chrome Web Store
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Identify latest ZIP
+        run: |
+          echo "LATEST_ZIP=$(ls -t ./artifacts/*.zip | head -n 1)" >> $GITHUB_ENV
+          echo {{$env.LATEST_ZIP}}
+
+      - name: Extension upload
+        uses: Klemensas/chrome-extension-upload-action@v1.3
+        with:
+          client-id: ${{ secrets.CHROME_WEBSTORE_SVC_CLIENT_ID }}
+          client-secret: ${{ secrets.CHROME_WEBSTORE_SVC_PRIVATE_KEY }}
+          file-name: ${{ env.LATEST_ZIP }}
+          app-id: 'habbodnofieogkocjdbdfabafpjgjbpb'
+          publish: true
