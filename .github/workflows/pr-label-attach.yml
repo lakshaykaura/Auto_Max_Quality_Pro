@@ -41,7 +41,7 @@ jobs:
         run: |
           BUMP="none"
           TMP_BUMP_FILE=bump.txt
-          COMMIT_MSGS=$(git log origin/main...HEAD --pretty=format:"%s")
+          COMMIT_MSGS=$(git log origin/master...HEAD --pretty=format:"%s")
           echo ========================
           echo "$COMMIT_MSGS" | while IFS= read -r msg; do
             echo
