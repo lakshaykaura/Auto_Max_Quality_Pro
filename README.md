@@ -4,7 +4,7 @@ A browser extension designed to automatically switch YouTube videos to the highe
 
 ## Installation
 
-[![Install from Chrome Web Store](https://developer.chrome.com/webstore/images/ChromeWebStore_BadgeWBorder_v2_206x58.png)](https://chrome.google.com/webstore/detail/youtube-max-quality-switc/habbodnofieogkocjdbdfabafpjgjbpb)
+[![Install from Chrome Web Store](https://storage.googleapis.com/web-dev-uploads/image/WlD8wC6g8khYWPJUsQceQkhXSlv1/UV4C4ybeBTsZt43U4xis.png)](https://chrome.google.com/webstore/detail/youtube-max-quality-switc/habbodnofieogkocjdbdfabafpjgjbpb)
 
 Click the badge above to install the extension from the Chrome Web Store.
 
