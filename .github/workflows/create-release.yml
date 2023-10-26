@@ -2,7 +2,7 @@ name: Create Release
 
 on:
     workflow_run:
-        workflows: ["Create Zip Artifact"]
+        workflows: ["Create Artifact"]
         types:
             - completed
 
@@ -19,6 +19,12 @@ jobs:
          sudo apt-get install -y jq
          VERSION=$(jq -r .version manifest.json)
          echo "CURRENT_RELEASE_VERSION=$VERSION" >> $GITHUB_ENV
+
+    - name: Download the ZIP artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: YouTube_Max_Quality_Switcher_v${{ env.CURRENT_RELEASE_VERSION }}
+        path: ./
 
     - name: Install GitHub CLI and Login
       run: |
