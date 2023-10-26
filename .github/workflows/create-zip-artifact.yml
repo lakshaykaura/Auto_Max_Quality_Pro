@@ -1,0 +1,31 @@
+name: Create Zip Artifact
+
+on:
+    workflow_run:
+        workflows: ["Version Updates"]
+        types:
+            - completed
+
+jobs:
+  zip:
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Extract version from manifest.json
+      run: |
+         sudo apt-get install -y jq
+         VERSION=$(jq -r .version manifest.json)
+         echo "MANIFEST_VERSION=$VERSION" >> $GITHUB_ENV
+
+    - name: Zip specific files
+      run: |
+        zip -r "YouTube_Max_Quality_Switcher_v${MANIFEST_VERSION}.zip" ./scripts/* ./media/* ./html/* ./styles/*
+      
+    - name: Upload ZIP as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: YouTube_Max_Quality_Switcher_v${{ env.MANIFEST_VERSION }}
+        path: YouTube_Max_Quality_Switcher_v${{ env.MANIFEST_VERSION }}.zip
