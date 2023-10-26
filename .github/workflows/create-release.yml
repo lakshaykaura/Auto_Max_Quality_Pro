@@ -15,14 +15,12 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Install GitHub CLI and Login
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C99B11DEB97541F0 23F3D4EA75716059
-          sudo apt-add-repository https://cli.github.com/packages
-          sudo apt update
-          sudo apt install -y gh
-          gh auth login --with-token <<< "${GH_TOKEN}"
+        sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C99B11DEB97541F0 23F3D4EA75716059
+        sudo apt-add-repository https://cli.github.com/packages
+        sudo apt update
+        sudo apt install -y gh
+        gh auth login --with-token <<< "${{ secrets.github_token }}"
 
     - name: Get latest draft release info
       id: get_draft
