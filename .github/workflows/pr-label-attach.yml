@@ -13,7 +13,6 @@ jobs:
     runs-on: ubuntu-20.04
     permissions: write-all
     steps:
-
       - name: Checkout code
         uses: actions/checkout@v4
         with:
@@ -36,33 +35,17 @@ jobs:
           sudo apt update
           sudo apt install -y gh
           gh auth login --with-token <<< "${{ secrets.github_token }}"
-          
+
       - name: Determine version bump
         id: determine-version
         run: |
-          COMMIT_MSG=$(git log --format=%B -n 1)
-          
           BUMP="none"
           TMP_BUMP_FILE=bump.txt
-          
-          PR_NUMBER=$(echo $COMMIT_MSG | grep -o '#[0-9]\+' | grep -o '[0-9]\+')
-
-          echo
-          echo "PR Number: $PR_NUMBER"
-          echo ========================
-
-          MERGE_COMMIT_HASH=$(git log --merges --oneline -1 | awk '{print $1}')
-      
-          # Determine the merge base
-          MERGE_BASE=$(git merge-base $MERGE_COMMIT_HASH master)
-      
-          COMMIT_MSGS=$(git log $MERGE_COMMIT_HASH^..$MERGE_COMMIT_HASH --pretty=format:"%s")
-          echo "Fetched Commit Messages: "
-          echo "$COMMIT_MSGS"
+          COMMIT_MSGS=$(git log origin/main...HEAD --pretty=format:"%s")
           echo ========================
           echo "$COMMIT_MSGS" | while IFS= read -r msg; do
             echo
-            
+              
             # Remove all whitespaces
             msg=$(echo "$msg" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
             echo "Processing commit: '$msg'"
@@ -95,7 +78,6 @@ jobs:
                 echo "Calculated version bump for this commit: null"
             fi
           done
-          
           if [[ -f $TMP_BUMP_FILE ]]; then
             BUMP=$(cat $TMP_BUMP_FILE)
             rm $TMP_BUMP_FILE
@@ -104,8 +86,8 @@ jobs:
           echo ========================
           echo "Final calculated version bump: $BUMP"
           echo "bump=$BUMP" >> $GITHUB_ENV
-            
-      - name: Remove existing version labels
+
+      - name: Remove existing version labels and add new one
         run: |
           if [[ "${{ env.bump }}" == "major" ]]; then
               LABEL="version: major"
@@ -114,7 +96,7 @@ jobs:
           else
               LABEL="version: patch"
           fi
-          
+
           # Remove existing version labels
           gh api repos/:owner/:repo/issues/${{ github.event.pull_request.number }}/labels -X DELETE -f name="version: major" -f name="version: minor" -f name="version: patch"
           
