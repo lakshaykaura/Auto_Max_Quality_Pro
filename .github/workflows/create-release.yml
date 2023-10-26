@@ -20,7 +20,7 @@ jobs:
          VERSION=$(jq -r .version manifest.json)
          echo "CURRENT_RELEASE_VERSION=$VERSION" >> $GITHUB_ENV
 
-    - name: Install GitHub CLI
+    - name: Install GitHub CLI and Authenticate
       run: |
         sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C99B11DEB97541F0 23F3D4EA75716059
         sudo apt-add-repository https://cli.github.com/packages
@@ -30,4 +30,4 @@ jobs:
 
     - name: Create GitHub Release with Artifact
       run: |
-        gh release create v${{ env.CURRENT_RELEASE_VERSION }} YouTube_Max_Quality_Switcher_v${{ env.CURRENT_RELEASE_VERSION }}.zip --title "Release v${{ env.CURRENT_RELEASE_VERSION }}" --notes "Release notes for v${{ env.MANIFEST_VERSION }}"
+        gh release create v${{ env.CURRENT_RELEASE_VERSION }} YouTube_Max_Quality_Switcher_v${{ env.CURRENT_RELEASE_VERSION }}.zip --title "Release v${{ env.CURRENT_RELEASE_VERSION }}" --notes "Release notes for v${{ env.CURRENT_RELEASE_VERSION }}"
