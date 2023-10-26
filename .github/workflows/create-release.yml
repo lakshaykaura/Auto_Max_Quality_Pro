@@ -1,0 +1,33 @@
+name: Create Release
+
+on:
+    workflow_run:
+        workflows: ["Create Zip Artifact"]
+        types:
+            - completed
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'pull_request' && github.ref == 'refs/heads/master'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Extract version from manifest.json
+      run: |
+         sudo apt-get install -y jq
+         VERSION=$(jq -r .version manifest.json)
+         echo "MANIFEST_VERSION=$VERSION" >> $GITHUB_ENV
+
+    - name: Authenticate with GitHub CLI
+      run: |
+        sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C99B11DEB97541F0 23F3D4EA75716059
+        sudo apt-add-repository https://cli.github.com/packages
+        sudo apt update
+        sudo apt install -y gh
+        gh auth login --with-token <<< "${{ secrets.github_token }}"
+
+    - name: Create GitHub Release with Artifact
+      run: |
+        gh release create v${{ env.MANIFEST_VERSION }} YouTube_Max_Quality_Switcher_v${{ env.MANIFEST_VERSION }}.zip --title "Release v${{ env.MANIFEST_VERSION }}" --notes "Release notes for v${{ env.MANIFEST_VERSION }}"
