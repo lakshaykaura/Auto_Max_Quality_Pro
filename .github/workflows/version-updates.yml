@@ -68,7 +68,7 @@ jobs:
               
               # Remove all whitespaces
               msg=$(echo "$msg" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
-              echo "Processing commit message after trimming: '$msg'"
+              echo "Processing commit: '$msg'"
               
               # Skip empty commit messages
               if [ -z "$msg" ]; then

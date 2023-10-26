@@ -7,8 +7,8 @@ A browser extension designed to automatically switch YouTube videos to the highe
 Here's an overview of the directory structure:
 
 - `media/`: Contains all the media files, including icons.
-- `content/scripts/`: Contains the JavaScript files.
-- `content/styles/`: Contains stylesheets.
+- `scripts/`: Contains the JavaScript files.
+- `styles/`: Contains stylesheets.
 - `html/`: Contains the HTML files like `popup.html`.
 
 Please ensure that you place files in the appropriate directories when contributing.
