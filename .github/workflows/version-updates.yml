@@ -44,16 +44,21 @@ jobs:
         id: get-bump-label
         run: |
           LABELS_JSON=$(gh pr view ${{ github.event.pull_request.number }} --json labels --jq '.labels[].name')
-          if echo "$LABELS_JSON" | grep -q "version: major"; then
-            echo "bump=major" >> $GITHUB_ENV
-          elif echo "$LABELS_JSON" | grep -q "version: minor"; then
-            echo "bump=minor" >> $GITHUB_ENV
-          else
-            echo "bump=patch" >> $GITHUB_ENV
-          fi
           echo
           echo ========================
-          echo "Final calculated version bump: ${{ env.bump }}"
+          if echo "$LABELS_JSON" | grep -q "version: major"; then
+            echo "Version bump: major"
+            echo "bump=major" >> $GITHUB_ENV
+          elif echo "$LABELS_JSON" | grep -q "version: minor"; then
+            echo "Version bump: minor"
+            echo "bump=minor" >> $GITHUB_ENV
+          elif echo "$LABELS_JSON" | grep -q "version: patch"; then
+            echo "Version bump: patch"
+            echo "bump=patch" >> $GITHUB_ENV
+          else
+            echo "Version bump: none"
+            echo "bump=none" >> $GITHUB_ENV
+          fi
 
       - name: Update manifest.json
         if: env.bump != 'none'
