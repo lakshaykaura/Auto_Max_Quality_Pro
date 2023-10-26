@@ -25,16 +25,21 @@ jobs:
     - name: Get latest draft release info
       id: get_draft
       run: |
-        RELEASE_DATA=$(gh release list --repo ${{ github.repository }} --limit 5 | grep draft)
+        set +e  # disable exit on error temporarily
         
-        if [ -z "$RELEASE_DATA" ]; then
+        RELEASE_DATA=$(gh release list --repo ${{ github.repository }} --limit 5 | grep draft)
+        STATUS=$?
+        
+        set -e  # enable exit on error again
+
+        if [ $STATUS -ne 0 ] || [ -z "$RELEASE_DATA" ]; then
           echo "No draft release found."
           echo "DRAFT_NOT_FOUND=1" >> $GITHUB_ENV
         else
           TAG_NAME=$(echo "$RELEASE_DATA" | awk '{print $1}')
           echo "Latest draft release tag: $TAG_NAME"
           echo "RELEASE_TAG=$TAG_NAME" >> $GITHUB_ENV
-    
+
     - name: Publish the draft release with Artifact
       if: env.DRAFT_NOT_FOUND != '1'
       run: |
