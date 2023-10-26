@@ -94,15 +94,16 @@ jobs:
             
       - name: Remove existing version labels
         run: |
-          # Remove existing version labels if they exist
-          gh pr set-label ${{ github.event.pull_request.number }} --remove "version: major" "version: minor" "version: patch"
-              
-      - name: Attach label based on version bump
-        run: |
           if [[ "${{ env.bump }}" == "major" ]]; then
-              gh pr set-label ${{ github.event.pull_request.number }} --add "version: major"
+              LABEL="version: major"
           elif [[ "${{ env.bump }}" == "minor" ]]; then
-              gh pr set-label ${{ github.event.pull_request.number }} --add "version: minor"
-          elif [[ "${{ env.bump }}" == "patch" ]]; then
-              gh pr set-label ${{ github.event.pull_request.number }} --add "version: patch"
+              LABEL="version: minor"
+          else
+              LABEL="version: patch"
           fi
+          
+          # Remove existing version labels
+          gh api repos/:owner/:repo/issues/${{ github.event.pull_request.number }}/labels -X DELETE -f name="version: major" -f name="version: minor" -f name="version: patch"
+          
+          # Add the calculated label
+          gh api repos/:owner/:repo/issues/${{ github.event.pull_request.number }}/labels -X POST -F labels[]="$LABEL"
