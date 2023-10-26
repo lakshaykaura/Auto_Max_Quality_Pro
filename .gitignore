@@ -6,7 +6,5 @@
 .vscode/
 
 # Generated artifacts
-/artifacts/*
 !/artifacts/
-/artifacts/archives/*
 !/artifacts/archives/
