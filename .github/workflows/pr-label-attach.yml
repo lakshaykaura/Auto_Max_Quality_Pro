@@ -1,0 +1,103 @@
+name: Attach PR Version Label
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  attach-label:
+    runs-on: ubuntu-20.04
+    permissions: write-all
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.github_token }}
+          fetch-depth: 0
+
+      - name: Install GitHub CLI and Login
+        run: |
+          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C99B11DEB97541F0 23F3D4EA75716059
+          sudo apt-add-repository https://cli.github.com/packages
+          sudo apt update
+          sudo apt install -y gh
+          gh auth login --with-token <<< "${{ secrets.github_token }}"
+
+          - name: Determine version bump
+          id: determine-version
+          run: |
+            COMMIT_MSG=$(git log --format=%B -n 1)
+            
+            BUMP="none"
+            TMP_BUMP_FILE=bump.txt
+            if [[ $COMMIT_MSG == "Merge pull request #"* ]]; then
+              PR_NUMBER=$(echo $COMMIT_MSG | grep -o '#[0-9]\+' | grep -o '[0-9]\+')
+  
+              echo
+              echo "PR Number: $PR_NUMBER"
+              echo ========================
+  
+              MERGE_COMMIT_HASH=$(git log --merges --oneline -1 | awk '{print $1}')
+          
+              # Determine the merge base
+              MERGE_BASE=$(git merge-base $MERGE_COMMIT_HASH master)
+          
+              COMMIT_MSGS=$(git log $MERGE_COMMIT_HASH^..$MERGE_COMMIT_HASH --pretty=format:"%s")
+              echo "Fetched Commit Messages: "
+              echo "$COMMIT_MSGS"
+              echo ========================
+              echo "$COMMIT_MSGS" | while IFS= read -r msg; do
+                echo
+                
+                # Remove all whitespaces
+                msg=$(echo "$msg" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+                echo "Processing commit: '$msg'"
+                
+                # Skip empty commit messages
+                if [ -z "$msg" ]; then
+                  continue
+                fi
+                
+                # Check if the message starts with "Revert" and extract the original commit message.
+                if [[ $msg == Revert* ]]; then
+                    msg="${msg#Revert \"}" # Remove "Revert " prefix
+                    msg="${msg%\"}"        # Remove trailing double quote
+                fi
+                
+                if [[ $msg == *"Release: "* ]]; then
+                    echo "major" > $TMP_BUMP_FILE
+                    break
+                elif [[ $msg == "Major Update: "* || $msg == "New Feature: "* || $msg == "Improvement: "* || $msg == "Performance: "* || $msg == "Bug Fix: "* || $msg == "Security Fix: "* || $msg == "Hotfix: "* ]]; then
+                    echo "minor" > $TMP_BUMP_FILE
+                elif [[ ! -f $TMP_BUMP_FILE ]]; then
+                  if [[ $msg == "Minor Update: "* || $msg == "Documentation Update: "* || $msg == "Build: "* || $msg == "CI: "* || $msg == "Style: "* ]]; then
+                      echo "patch" > $TMP_BUMP_FILE
+                  fi
+                fi
+                
+                if [[ -f $TMP_BUMP_FILE ]]; then
+                    echo "Calculated version bump for this commit: $(cat $TMP_BUMP_FILE)"
+                else
+                    echo "Calculated version bump for this commit: null"
+                fi
+              done
+              
+              if [[ -f $TMP_BUMP_FILE ]]; then
+                BUMP=$(cat $TMP_BUMP_FILE)
+                rm $TMP_BUMP_FILE
+              fi
+            fi
+            echo
+            echo ========================
+            echo "Final calculated version bump: $BUMP"
+            echo "bump=$BUMP" >> $GITHUB_ENV
+            
+        - name: Attach label based on version bump
+          run: |
+            if [[ "${{ env.bump }}" == "major" ]]; then
+              gh pr set-label ${{ github.event.pull_request.number }} --add "version: major"
+            elif [[ "${{ env.bump }}" == "minor" ]]; then
+              gh pr set-label ${{ github.event.pull_request.number }} --add "version: minor"
+            else
+              gh pr set-label ${{ github.event.pull_request.number }} --add "version: patch"
+            fi
