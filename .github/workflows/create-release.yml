@@ -2,7 +2,7 @@ name: Create Release
 
 on:
     workflow_run:
-        workflows: ["Create Artifact"]
+        workflows: ["Create Zip Artifact"]
         types:
             - completed
 
@@ -25,10 +25,10 @@ jobs:
     - name: Get latest draft release info
       id: get_draft
       run: |
-         RELEASE_DATA=$(gh release list --repo ${{ github.repository }} --limit 1 --draft | grep draft)
-         TAG_NAME=$(echo "$RELEASE_DATA" | awk '{print $1}')
-         echo "Latest draft release tag: $TAG_NAME"
-         echo "RELEASE_TAG=$TAG_NAME" >> $GITHUB_ENV
+        RELEASE_DATA=$(gh release list --repo ${{ github.repository }} --limit 5 | grep draft)
+        TAG_NAME=$(echo "$RELEASE_DATA" | awk '{print $1}')
+        echo "Latest draft release tag: $TAG_NAME"
+        echo "RELEASE_TAG=$TAG_NAME" >> $GITHUB_ENV
 
     - name: Publish the draft release with Artifact from repo
       run: |
