@@ -1,4 +1,4 @@
-name: Create Zip Artifact
+name: Create Artifact
 
 on:
     workflow_run:
@@ -20,12 +20,14 @@ jobs:
          VERSION=$(jq -r .version manifest.json)
          echo "CURRENT_RELEASE_VERSION=$VERSION" >> $GITHUB_ENV
 
-    - name: Zip specific files
+    - name: Create directory for artifact and copy specific files
       run: |
-        zip -r "YouTube_Max_Quality_Switcher_v${CURRENT_RELEASE_VERSION}.zip" ./scripts/* ./media/* ./html/* ./styles/*
-      
-    - name: Upload ZIP as artifact
+        mkdir YouTube_Max_Quality_Switcher_v${CURRENT_RELEASE_VERSION}
+        cp manifest.json YouTube_Max_Quality_Switcher_v${CURRENT_RELEASE_VERSION}
+        cp -r ./scripts ./media ./html ./styles YouTube_Max_Quality_Switcher_v${CURRENT_RELEASE_VERSION}/
+
+    - name: Upload directory as artifact
       uses: actions/upload-artifact@v3
       with:
         name: YouTube_Max_Quality_Switcher_v${{ env.CURRENT_RELEASE_VERSION }}
-        path: YouTube_Max_Quality_Switcher_v${{ env.CURRENT_RELEASE_VERSION }}.zip
+        path: YouTube_Max_Quality_Switcher_v${{ env.CURRENT_RELEASE_VERSION }}
