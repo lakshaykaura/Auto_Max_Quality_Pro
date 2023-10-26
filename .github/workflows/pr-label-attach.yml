@@ -92,12 +92,12 @@ jobs:
             echo "Final calculated version bump: $BUMP"
             echo "bump=$BUMP" >> $GITHUB_ENV
             
-        - name: Attach label based on version bump
-          run: |
-            if [[ "${{ env.bump }}" == "major" ]]; then
+      - name: Attach label based on version bump
+        run: |
+          if [[ "${{ env.bump }}" == "major" ]]; then
               gh pr set-label ${{ github.event.pull_request.number }} --add "version: major"
-            elif [[ "${{ env.bump }}" == "minor" ]]; then
+          elif [[ "${{ env.bump }}" == "minor" ]]; then
               gh pr set-label ${{ github.event.pull_request.number }} --add "version: minor"
-            else
+          else
               gh pr set-label ${{ github.event.pull_request.number }} --add "version: patch"
-            fi
+          fi
