@@ -14,20 +14,41 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Extract version from manifest.json
+    - name: Get latest draft release info
+      id: get_draft
+      run: |
+        RELEASE_DATA=$(gh release list --repo ${{ github.repository }} --limit 5 | grep draft)
+        
+        if [ -z "$RELEASE_DATA" ]; then
+          echo "No draft release found."
+          echo "DRAFT_NOT_FOUND=1" >> $GITHUB_ENV
+        else
+          TAG_NAME=$(echo "$RELEASE_DATA" | awk '{print $1}')
+          echo "Latest draft release tag: $TAG_NAME"
+          echo "RELEASE_TAG=$TAG_NAME" >> $GITHUB_ENV
+    
+    - name: Publish the draft release with Artifact
+      if: env.DRAFT_NOT_FOUND != '1'
+      run: |
+         gh release upload ${{ env.RELEASE_TAG }} ./artifacts/YouTube_Max_Quality_Switcher_v${{ env.RELEASE_TAG }}.zip --repo ${{ github.repository }}
+    
+    - name: Extract version from manifest.json (Fallback Mode)
+      if: env.DRAFT_NOT_FOUND == '1'
       run: |
           sudo apt-get install -y jq
           VERSION=$(jq -r .version manifest.json)
           echo "CURRENT_RELEASE_VERSION=$VERSION" >> $GITHUB_ENV
-
+    
     - name: Install GitHub CLI and Login
+      if: env.DRAFT_NOT_FOUND == '1'
       run: |
          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C99B11DEB97541F0 23F3D4EA75716059
          sudo apt-add-repository https://cli.github.com/packages
          sudo apt update
          sudo apt install -y gh
          gh auth login --with-token <<< "${{ secrets.github_token }}"
-
-    - name: Create GitHub Release with Artifact from repo
+    
+    - name: Create GitHub Release with Artifact (Fallback Mode)
+      if: env.DRAFT_NOT_FOUND == '1'
       run: |
-         gh release create v${{ env.CURRENT_RELEASE_VERSION }} YouTube_Max_Quality_Switcher_v${{ env.CURRENT_RELEASE_VERSION }}.zip --title "Release v${{ env.CURRENT_RELEASE_VERSION }}" --notes "Release notes for v${{ env.CURRENT_RELEASE_VERSION }}"
+         gh release create v${{ env.CURRENT_RELEASE_VERSION }} ./artifacts/YouTube_Max_Quality_Switcher_v${{ env.CURRENT_RELEASE_VERSION }}.zip --title "Release v${{ env.CURRENT_RELEASE_VERSION }}" --notes "Release notes for v${{ env.CURRENT_RELEASE_VERSION }}"
