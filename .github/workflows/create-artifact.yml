@@ -29,5 +29,5 @@ jobs:
     - name: Upload directory as artifact
       uses: actions/upload-artifact@v3
       with:
-        name: YouTube_Max_Quality_Switcher_v${{ env.CURRENT_RELEASE_VERSION }}
+        name: YouTube_Max_Quality_Switcher_v${{ env.CURRENT_RELEASE_VERSION }}.zip
         path: YouTube_Max_Quality_Switcher_v${{ env.CURRENT_RELEASE_VERSION }}
