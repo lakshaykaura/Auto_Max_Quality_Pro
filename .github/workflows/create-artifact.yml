@@ -9,6 +9,7 @@ on:
 jobs:
   zip:
     runs-on: ubuntu-20.04
+    permissions: write-all
     if: github.event.workflow_run.conclusion == 'success'
     steps:
     - name: Checkout code
