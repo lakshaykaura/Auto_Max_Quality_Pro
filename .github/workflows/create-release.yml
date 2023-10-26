@@ -8,7 +8,7 @@ on:
 
 jobs:
   release:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     if: github.event.workflow_run.conclusion == 'success'
     steps:
     - name: Checkout code
@@ -20,13 +20,13 @@ jobs:
          VERSION=$(jq -r .version manifest.json)
          echo "CURRENT_RELEASE_VERSION=$VERSION" >> $GITHUB_ENV
 
-    - name: Install GitHub CLI and Authenticate
+    - name: Install GitHub CLI and Login
       run: |
-        sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C99B11DEB97541F0 23F3D4EA75716059
-        sudo apt-add-repository https://cli.github.com/packages
-        sudo apt update
-        sudo apt install -y gh
-        gh auth login --with-token <<< "${{ secrets.github_token }}"
+         sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C99B11DEB97541F0 23F3D4EA75716059
+         sudo apt-add-repository https://cli.github.com/packages
+         sudo apt update
+         sudo apt install -y gh
+         gh auth login --with-token <<< "${{ secrets.github_token }}"
 
     - name: Create GitHub Release with Artifact
       run: |
