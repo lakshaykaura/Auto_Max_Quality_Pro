@@ -53,7 +53,7 @@ jobs:
           fi
           echo
           echo ========================
-          echo "Final calculated version bump: $bump"
+          echo "Final calculated version bump: ${{ env.bump }}"
 
       - name: Update manifest.json
         if: env.bump != 'none'
