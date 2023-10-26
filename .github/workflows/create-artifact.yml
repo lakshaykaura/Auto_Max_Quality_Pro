@@ -25,18 +25,30 @@ jobs:
         mkdir YouTube_Max_Quality_Switcher_v${CURRENT_RELEASE_VERSION}
         cp manifest.json YouTube_Max_Quality_Switcher_v${CURRENT_RELEASE_VERSION}
         cp -r ./scripts ./media ./html ./styles YouTube_Max_Quality_Switcher_v${CURRENT_RELEASE_VERSION}/
+      
+    - name: Zip the directory
+      run: |
+        zip -r ./artifacts/YouTube_Max_Quality_Switcher_v${CURRENT_RELEASE_VERSION}.zip YouTube_Max_Quality_Switcher_v${CURRENT_RELEASE_VERSION}
 
-    - name: Upload directory as artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: YouTube_Max_Quality_Switcher_v${{ env.CURRENT_RELEASE_VERSION }}
-        path: YouTube_Max_Quality_Switcher_v${{ env.CURRENT_RELEASE_VERSION }}
+    - name: Archive old artifacts
+      run: |
+        mkdir -p ./artifacts/archives/
+        ARTIFACTS=(./artifacts/*.zip)
+        NUM_ARTIFACTS=${#ARTIFACTS[@]}
+        MAX_ARTIFACTS=3
 
-    - name: Commit and push the artifact
+        if (( NUM_ARTIFACTS > MAX_ARTIFACTS )); then
+          TO_ARCHIVE=$((NUM_ARTIFACTS - MAX_ARTIFACTS))
+          for artifact in "${ARTIFACTS[@]:0:$TO_ARCHIVE}"; do
+            mv "$artifact" ./artifacts/archives/
+          done
+        fi
+
+    - name: Commit and push artifact changes
       run: |
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
         git remote set-url origin https://${{ secrets.github_token }}@github.com/lakshaykaura/YouTube_Max_Quality_Switcher.git
-        git add YouTube_Max_Quality_Switcher_v${CURRENT_RELEASE_VERSION}.zip
-        git commit -m "Temporarily Artifact added! [auto-bump]"
+        git add ./artifacts/
+        git commit -m "New Artifact created and older ones were archived! [auto-bump]"
         git push origin HEAD:${{ github.ref }}

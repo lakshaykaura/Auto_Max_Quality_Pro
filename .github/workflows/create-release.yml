@@ -14,12 +14,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Extract version from manifest.json
-      run: |
-         sudo apt-get install -y jq
-         VERSION=$(jq -r .version manifest.json)
-         echo "CURRENT_RELEASE_VERSION=$VERSION" >> $GITHUB_ENV
-
     - name: Install GitHub CLI and Login
       run: |
          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C99B11DEB97541F0 23F3D4EA75716059
@@ -28,15 +22,14 @@ jobs:
          sudo apt install -y gh
          gh auth login --with-token <<< "${{ secrets.github_token }}"
 
-    - name: Create GitHub Release with Artifact from repo
+    - name: Get latest draft release info
+      id: get_draft
       run: |
-         gh release create v${{ env.CURRENT_RELEASE_VERSION }} YouTube_Max_Quality_Switcher_v${{ env.CURRENT_RELEASE_VERSION }}.zip --title "Release v${{ env.CURRENT_RELEASE_VERSION }}" --notes "Release notes for v${{ env.CURRENT_RELEASE_VERSION }}"
-   
-    - name: Remove the artifact from the repo
+         RELEASE_DATA=$(gh release list --repo ${{ github.repository }} --limit 1 --draft | grep draft)
+         TAG_NAME=$(echo "$RELEASE_DATA" | awk '{print $1}')
+         echo "Latest draft release tag: $TAG_NAME"
+         echo "RELEASE_TAG=$TAG_NAME" >> $GITHUB_ENV
+
+    - name: Publish the draft release with Artifact from repo
       run: |
-         git config user.name "GitHub Actions"
-         git config user.email "actions@github.com"
-         git remote set-url origin https://${{ secrets.github_token }}@github.com/lakshaykaura/YouTube_Max_Quality_Switcher.git
-         git rm YouTube_Max_Quality_Switcher_v${{ env.CURRENT_RELEASE_VERSION }}.zip
-         git commit -m "Temporary Artifact removed! [auto-bump]"
-         git push origin HEAD:${{ github.ref }}
+         gh release upload ${{ env.RELEASE_TAG }} ./artifacts/YouTube_Max_Quality_Switcher_v${{ env.RELEASE_TAG }}.zip --repo ${{ github.repository }}
