@@ -31,3 +31,12 @@ jobs:
       with:
         name: YouTube_Max_Quality_Switcher_v${{ env.CURRENT_RELEASE_VERSION }}
         path: YouTube_Max_Quality_Switcher_v${{ env.CURRENT_RELEASE_VERSION }}
+
+    - name: Commit and push the artifact
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+        git remote set-url origin https://${{ secrets.github_token }}@github.com/lakshaykaura/YouTube_Max_Quality_Switcher.git
+        git add YouTube_Max_Quality_Switcher_v${CURRENT_RELEASE_VERSION}.zip
+        git commit -m "Temporarily Artifact added! [auto-bump]"
+        git push origin HEAD:${{ github.ref }}

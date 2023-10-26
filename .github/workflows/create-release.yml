@@ -20,12 +20,6 @@ jobs:
          VERSION=$(jq -r .version manifest.json)
          echo "CURRENT_RELEASE_VERSION=$VERSION" >> $GITHUB_ENV
 
-    - name: Download the ZIP artifact
-      uses: actions/download-artifact@v3
-      with:
-        name: YouTube_Max_Quality_Switcher_v${{ env.CURRENT_RELEASE_VERSION }}
-        path: ./
-
     - name: Install GitHub CLI and Login
       run: |
          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C99B11DEB97541F0 23F3D4EA75716059
@@ -34,6 +28,15 @@ jobs:
          sudo apt install -y gh
          gh auth login --with-token <<< "${{ secrets.github_token }}"
 
-    - name: Create GitHub Release with Artifact
+    - name: Create GitHub Release with Artifact from repo
       run: |
-        gh release create v${{ env.CURRENT_RELEASE_VERSION }} YouTube_Max_Quality_Switcher_v${{ env.CURRENT_RELEASE_VERSION }}.zip --title "Release v${{ env.CURRENT_RELEASE_VERSION }}" --notes "Release notes for v${{ env.CURRENT_RELEASE_VERSION }}"
+         gh release create v${{ env.CURRENT_RELEASE_VERSION }} YouTube_Max_Quality_Switcher_v${{ env.CURRENT_RELEASE_VERSION }}.zip --title "Release v${{ env.CURRENT_RELEASE_VERSION }}" --notes "Release notes for v${{ env.CURRENT_RELEASE_VERSION }}"
+   
+    - name: Remove the artifact from the repo
+      run: |
+         git config user.name "GitHub Actions"
+         git config user.email "actions@github.com"
+         git remote set-url origin https://${{ secrets.github_token }}@github.com/lakshaykaura/YouTube_Max_Quality_Switcher.git
+         git rm YouTube_Max_Quality_Switcher_v${{ env.CURRENT_RELEASE_VERSION }}.zip
+         git commit -m "Temporary Artifact removed! [auto-bump]"
+         git push origin HEAD:${{ github.ref }}
