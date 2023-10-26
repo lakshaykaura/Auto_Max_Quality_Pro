@@ -25,6 +25,9 @@ jobs:
         mkdir YouTube_Max_Quality_Switcher_v${CURRENT_RELEASE_VERSION}
         cp manifest.json YouTube_Max_Quality_Switcher_v${CURRENT_RELEASE_VERSION}
         cp -r ./scripts ./media ./html ./styles YouTube_Max_Quality_Switcher_v${CURRENT_RELEASE_VERSION}/
+
+    - name: Ensure artifacts directory exists
+      run: mkdir -p ./artifacts/
       
     - name: Zip the directory
       run: |
