@@ -1,10 +1,10 @@
 name: Create Release
 
 on:
-    workflow_run:
-        workflows: ["Create Zip Artifact"]
-        types:
-            - completed
+  workflow_run:
+    workflows: ["Create Zip Artifact"]
+    types:
+      - completed
 
 jobs:
   release:
@@ -12,47 +12,56 @@ jobs:
     permissions: write-all
     if: github.event.workflow_run.conclusion == 'success'
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Install GitHub CLI and Login
-      run: |
-        sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C99B11DEB97541F0 23F3D4EA75716059
-        sudo apt-add-repository https://cli.github.com/packages
-        sudo apt update
-        sudo apt install -y gh
-        gh auth login --with-token <<< "${{ secrets.github_token }}"
+      - name: Install GitHub CLI and Login
+        run: |
+          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C99B11DEB97541F0 23F3D4EA75716059
+          sudo apt-add-repository https://cli.github.com/packages
+          sudo apt update
+          sudo apt install -y gh
+          gh auth login --with-token <<< "${{ secrets.github_token }}"
 
-    - name: Get latest draft release info
-      id: get_draft
-      run: |
-        set +e  # disable exit on error temporarily
-        RELEASE_DATA=$(gh release list --repo ${{ github.repository }} --limit 5 | grep draft)
-        STATUS=$?
-        set -e  # enable exit on error again
-
-        if [ $STATUS -ne 0 ] || [ -z "$RELEASE_DATA" ]; then
-          echo "No draft release found."
-          echo "DRAFT_NOT_FOUND=1" >> $GITHUB_ENV
-        else
-          TAG_NAME=$(echo "$RELEASE_DATA" | awk '{print $1}')
-          echo "Latest draft release tag: $TAG_NAME"
-          echo "RELEASE_TAG=$TAG_NAME" >> $GITHUB_ENV
-        fi
-
-    - name: Publish the draft release with Artifact
-      if: env.DRAFT_NOT_FOUND != '1'
-      run: |
-         gh release upload ${{ env.RELEASE_TAG }} ./artifacts/YouTube_Max_Quality_Switcher_v${{ env.RELEASE_TAG }}.zip --repo ${{ github.repository }}
-    
-    - name: Extract version from manifest.json (Fallback Mode)
-      if: env.DRAFT_NOT_FOUND == '1'
-      run: |
-          sudo apt-get install -y jq
-          VERSION=$(jq -r .version manifest.json)
+      - name: Get release version
+        id: get_version
+        run: |
+          set +e  # disable exit on error temporarily
+          RELEASE_DATA=$(gh release list --repo ${{ github.repository }} --limit 5 | grep draft)
+          STATUS=$?
+          set -e  # enable exit on error again
+          
+          if [ $STATUS -ne 0 ] || [ -z "$RELEASE_DATA" ]; then
+            echo "No draft release found."
+            echo "DRAFT_NOT_FOUND=1" >> $GITHUB_ENV
+            sudo apt-get install -y jq
+            VERSION=$(jq -r .version manifest.json)
+          else
+            TAG_NAME=$(echo "$RELEASE_DATA" | awk '{print $1}')
+            VERSION=$TAG_NAME
+            UPLOAD_URL=$(gh release view $TAG_NAME --json upload_url -q .upload_url)
+            echo "UPLOAD_URL=$UPLOAD_URL" >> $GITHUB_ENV
+          fi
           echo "CURRENT_RELEASE_VERSION=$VERSION" >> $GITHUB_ENV
-    
-    - name: Create GitHub Release with Artifact (Fallback Mode)
-      if: env.DRAFT_NOT_FOUND == '1'
-      run: |
-         gh release create v${{ env.CURRENT_RELEASE_VERSION }} ./artifacts/YouTube_Max_Quality_Switcher_v${{ env.CURRENT_RELEASE_VERSION }}.zip --title "Release v${{ env.CURRENT_RELEASE_VERSION }}" --notes "Release notes for v${{ env.CURRENT_RELEASE_VERSION }}"
+
+      - name: Create GitHub Release (Fallback Mode)
+        if: env.DRAFT_NOT_FOUND == '1'
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          tag_name: v${{ env.CURRENT_RELEASE_VERSION }}
+          release_name: Release v${{ env.CURRENT_RELEASE_VERSION }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url || env.UPLOAD_URL}}
+          asset_path: ./artifacts/YouTube_Max_Quality_Switcher_v${{ env.CURRENT_RELEASE_VERSION }}.zip
+          asset_name: YouTube_Max_Quality_Switcher_v${{ env.CURRENT_RELEASE_VERSION }}.zip
+          asset_content_type: application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
