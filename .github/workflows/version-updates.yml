@@ -51,6 +51,9 @@ jobs:
           else
             echo "bump=patch" >> $GITHUB_ENV
           fi
+          echo
+          echo ========================
+          echo "Final calculated version bump: $bump"
 
       - name: Update manifest.json
         if: env.bump != 'none'
