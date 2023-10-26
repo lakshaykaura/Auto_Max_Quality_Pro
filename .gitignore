@@ -1,0 +1,12 @@
+# OS generated files
+.DS_Store
+
+# Editor and IDE folders
+.idea/
+.vscode/
+
+# Generated artifacts
+/artifacts/*
+!/artifacts/
+/artifacts/archives/*
+!/artifacts/archives/
