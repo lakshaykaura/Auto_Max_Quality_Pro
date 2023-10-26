@@ -25,7 +25,7 @@ jobs:
     - name: Get latest draft release info
       id: get_draft
       run: |
-        RELEASE_DATA=$(gh release list --repo ${{ github.repository }} --limit 5 | grep draft) # We increased the limit to 5 to have a better chance of getting a draft if available.
+        RELEASE_DATA=$(gh release list --repo ${{ github.repository }} --limit 5 | grep draft)
         TAG_NAME=$(echo "$RELEASE_DATA" | awk '{print $1}')
         echo "Latest draft release tag: $TAG_NAME"
         echo "RELEASE_TAG=$TAG_NAME" >> $GITHUB_ENV
