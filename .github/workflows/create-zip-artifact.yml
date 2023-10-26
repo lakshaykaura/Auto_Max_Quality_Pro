@@ -1,4 +1,4 @@
-name: Create Artifact
+name: Create Zip Artifact
 
 on:
     workflow_run:
@@ -7,7 +7,7 @@ on:
             - completed
 
 jobs:
-  zip:
+  artifact-zip:
     runs-on: ubuntu-20.04
     permissions: write-all
     if: github.event.workflow_run.conclusion == 'success'
