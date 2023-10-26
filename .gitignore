@@ -4,7 +4,3 @@
 # Editor and IDE folders
 .idea/
 .vscode/
-
-# Generated artifacts
-!/artifacts/
-!/artifacts/archives/
