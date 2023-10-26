@@ -25,9 +25,14 @@ jobs:
     - name: Get latest draft release info
       id: get_draft
       run: |
-        RELEASE_DATA=$(gh release list --repo ${{ github.repository }} --limit 5 | grep draft || true)
+        set +e  # disable exit on error temporarily
+        
+        RELEASE_DATA=$(gh release list --repo ${{ github.repository }} --limit 5 | grep draft)
+        STATUS=$?
+        
+        set -e  # enable exit on error again
 
-        if [ -z "$RELEASE_DATA" ]; then
+        if [ $STATUS -ne 0 ] || [ -z "$RELEASE_DATA" ]; then
           echo "No draft release found."
           echo "DRAFT_NOT_FOUND=1" >> $GITHUB_ENV
         else
