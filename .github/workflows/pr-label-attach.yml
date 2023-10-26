@@ -20,6 +20,9 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.ref }}
 
+      - name: Fetch all branches
+        run: git fetch --all
+
       - name: Check for [auto-bump] in commit message
         run: |
           COMMIT_MSG=$(git log --format=%B -n 1)
