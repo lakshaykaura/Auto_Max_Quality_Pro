@@ -1,45 +1,97 @@
+:root {
+    --background-color-light: #fff;
+    --text-color-light: #333;
+    --background-color-dark: #343a40;
+    --text-color-dark: #fff;
+    --primary-color: #28a745;
+    --donate-button-color: #ff5733;
+    --alert-color: #007bff;
+}
+
 body {
     width: 300px;
+    background-color: var(--background-color-light);
+    color: var(--text-color-light);
+    transition: background-color 0.3s, color 0.3s;
 }
 
-/* Dark mode styling */
 @media (prefers-color-scheme: dark) {
     body {
-        background-color: #343a40;
-        color: #fff;
-    }
-
-    .form-control {
-        background-color: #495057;
-        color: #fff;
-        border-color: #6c757d;
-    }
-
-    .btn-success {
-        background-color: #28a745;
-        border-color: #28a745;
+        background-color: var(--background-color-dark);
+        color: var(--text-color-dark);
     }
 }
 
-/* Extra small button */
 .btn-xs {
     padding: 0.25rem 0.5rem;
     font-size: 0.7875rem;
     line-height: 1.5;
     border-radius: 0.2rem;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--text-color-dark);
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+.btn-xs:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
 }
 
 #message {
     margin-top: 15px;
     display: none;
+    background-color: var(--alert-color);
+    color: var(--text-color-dark);
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-align: center;
 }
 
 #donate-qr {
     display: none;
     text-align: center;
     margin-bottom: 15px;
+    margin-top: 20px;
 }
 
 .donate-button-container {
     margin-bottom: 10px;
+}
+
+#donateBtn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7875rem;
+    line-height: 1.5;
+    border-radius: 0.2rem;
+    background-color: var(--donate-button-color);
+    border-color: var(--donate-button-color);
+    color: var(--text-color-dark);
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+#donateBtn:hover {
+    background-color: #e6281b;
+    border-color: #c92216;
+    transform: scale(1.05);
+}
+
+.active-button {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    color: var(--text-color-dark) !important;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+.back-button {
+    background-color: #048b7d !important;
+    border-color: #048b7d !important;
+    color: var(--text-color-dark) !important;
+    transition: background-color 0.3s, border-color 0.5s, color 0.3s;
+}
+
+.back-button-img {
+    display: none;
+    margin-right: 5px;
+    margin-bottom: 2px;
 }

@@ -9,27 +9,30 @@
 
     <body class="p-3">
         <div class="text-right donate-button-container">
-            <button id="donateBtn" class="btn btn-info btn-sm btn-xs">Donate Now</button>
+            <button id="donateBtn" class="btn btn-info btn-sm btn-xs">
+                <img src="../media/back-button.png" alt="Back" width="15px" class="back-button-img"/><span class="button-text">Donate Now</span></button>
         </div>
         <div id="donate-qr">
-            <img src="../media/qr_code.png" alt="Paytm QR Code" width="200">
+            <img src="../media/qr_code.png" alt="Paytm QR Code" width="200px">
         </div>
-        <p><i>This extension will continuously monitor video links and as soon a new video is opened it will select
-                <span style="color: rgb(252, 252, 212);">"Maximum Available Quality"</span>.</br>
-                If user manually changes video quality later, the extension will wait for below configured seconds and
-                then
-                kick-in to re-select <span style="color: rgb(252, 252, 212);">"Maximum Available Quality"</span> for
-                same
-                video.</i></p>
-        <div class="form-group d-flex justify-content-between align-items-center">
-            <label for="interval" class="mb-0">Wait interval (in seconds):</label>
-            <input type="number" id="interval" min="1" class="form-control" style="width: 60%;">
-        </div>
-        <div class="text-center">
-            <button id="save" class="btn btn-success">Save</button>
-        </div>
-        <div id="message" class="alert alert-success mt-3" role="alert">
-            Settings saved!
+        <div class="hideOnDonate">
+            <p><i>This extension will continuously monitor video links and as soon a new video is opened it will select
+                    <span style="color: rgb(252, 252, 212);">"Maximum Available Quality"</span>.</br>
+                    If user manually changes video quality later, the extension will wait for below configured seconds and
+                    then
+                    kick-in to re-select <span style="color: rgb(252, 252, 212);">"Maximum Available Quality"</span> for
+                    same
+                    video.</i></p>
+            <div class="form-group d-flex justify-content-between align-items-center">
+                <label for="interval" class="mb-0">Wait interval (in seconds):</label>
+                <input type="number" id="interval" min="1" class="form-control" style="width: 60%;">
+            </div>
+            <div class="text-center">
+                <button id="save" class="btn btn-success">Save</button>
+            </div>
+            <div id="message" class="alert alert-success mt-3" role="alert">
+                Settings saved!
+            </div>
         </div>
         <script src="../scripts/jquery-3.6.0.min.js"></script>
         <script src="../scripts/popup.js"></script>
