@@ -1,3 +1,5 @@
+const qualityPriority = ['4320p', '2880p', '2160p', '1440p', '1080p', '720p', '480p', '360p', '240p', '144p'];
+
 function getIntervalAndRun() {
     chrome.storage.sync.get('checkInterval', function (data) {
         const interval = data.checkInterval || 60000;
@@ -52,31 +54,54 @@ window.checkAndAdjustYouTubeVideoQuality = function (interval) {
     }
 
     function adjustQuality() {
-        const settingsButton = $('button.ytp-settings-button');
-        if (settingsButton.length && shouldAdjustQuality) {
-            settingsButton.click();
-            setTimeout(() => {
-                const qualityMenu = $('.ytp-panel-menu[role="menu"] > .ytp-menuitem:last-child');
-                if (qualityMenu.length) {
-                    qualityMenu.click();
-                    setTimeout(() => {
-                        const availableQualities = $('.ytp-quality-menu .ytp-panel-menu[role="menu"] > .ytp-menuitem');
-                        if (availableQualities.length) {
-                            availableQualities.first().click();
-                            const videoFrame = availableQualities.parents('div.html5-video-player');
-                            showSuccessMessage(availableQualities.first().text().trim(), videoFrame);
-                            console.log(`YouTube Max Quality Switcher Extension: Changed quality to ${availableQualities.first().text().trim()} for: ${getYouTubeTitle()}`);
-                        }
+        chrome.storage.sync.get('maxQuality', function (data) {
+            const maxQuality = data.maxQuality || '1080p';
+            const settingsButton = $('button.ytp-settings-button');
+            if (settingsButton.length && shouldAdjustQuality) {
+                settingsButton.click();
+                setTimeout(() => {
+                    const qualityMenu = $('.ytp-panel-menu[role="menu"] > .ytp-menuitem:last-child');
+                    if (qualityMenu.length) {
+                        qualityMenu.click();
+                        setTimeout(() => {
+                            let selectedQuality;
+                            const availableQualities = $('.ytp-quality-menu .ytp-panel-menu[role="menu"] > .ytp-menuitem');
+                            if (availableQualities.length) {
+                                // Find the index of the desired quality in the priority list
+                                const maxQualityIndex = qualityPriority.indexOf(maxQuality);
 
-                        // Close settings panel
-                        settingsButton.click();
+                                // Select the next best available quality
+                                for (let i = maxQualityIndex; i < qualityPriority.length; i++) {
+                                    availableQualities.each(function () {
+                                        if ($(this).text().includes(qualityPriority[i])) {
+                                            selectedQuality = $(this);
+                                            return false;
+                                        }
+                                    });
+                                    if (selectedQuality) break;
+                                }
 
-                        // Reset the flag
-                        shouldAdjustQuality = false;
-                    }, 500);
-                }
-            }, 500);
-        }
+                                // If no suitable quality was found, choose the highest available
+                                if (!selectedQuality) {
+                                    selectedQuality = availableQualities.first();
+                                }
+
+                                selectedQuality.click();
+                                const videoFrame = selectedQuality.parents('div.html5-video-player');
+                                showSuccessMessage(selectedQuality.text().trim(), videoFrame);
+                                console.log(`YouTube Max Quality Switcher Extension: Changed quality to ${selectedQuality.text().trim()} for: ${getYouTubeTitle()}`);
+                            }
+
+                            // Close settings panel
+                            settingsButton.click();
+
+                            // Reset the flag
+                            shouldAdjustQuality = false;
+                        }, 500);
+                    }
+                }, 500);
+            }
+        });
     }
 
     // Adjust the quality immediately when the page loads

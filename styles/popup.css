@@ -1,8 +1,12 @@
 :root {
     --background-color-light: #fff;
     --text-color-light: #333;
+    --input-background-light: #fff;
+    --border-color-light: #ced4da;
     --background-color-dark: #343a40;
     --text-color-dark: #fff;
+    --input-background-dark: #495057;
+    --border-color-dark: #495057;
     --primary-color: #28a745;
     --donate-button-color: #ff5733;
     --alert-color: #004286;
@@ -22,6 +26,23 @@ body {
         background-color: var(--background-color-dark);
         color: var(--text-color-dark);
     }
+
+    .quality-dropdown, #interval {
+        background-color: var(--input-background-dark);
+        border: 1px solid var(--border-color-dark);
+    }
+
+    .disclaimer {
+        color: var(--text-color-dark) !important;
+    }
+
+    .quality-selection label, .form-group label {
+        color: var(--text-color-dark) !important;
+    }
+
+    .btn-xs, #donateBtn, .active-button, .back-button {
+        color: var(--text-color-dark) !important;
+    }
 }
 
 /* BUTTON STYLES */
@@ -30,7 +51,6 @@ body {
     font-size: 0.7875rem;
     line-height: 1.5;
     border-radius: 0.2rem;
-    color: var(--text-color-dark);
     transition: background-color 0.3s, border-color 0.3s, color 0.3s;
 }
 
@@ -66,19 +86,20 @@ body {
 }
 
 /* COMPONENTS & MISC STYLES */
-#message {
+#message, #donate-qr {
     margin-top: 15px;
     display: none;
+    text-align: center;
+}
+
+#message {
     background-color: var(--alert-color);
     color: var(--text-color-dark);
     padding: 5px 10px;
     border-radius: 4px;
-    text-align: center;
 }
 
 #donate-qr {
-    display: none;
-    text-align: center;
     margin: 20px 0 15px;
 }
 
@@ -93,13 +114,12 @@ body {
 }
 
 #interval {
-    font-size: 1rem;
     padding: .5rem .75rem;
     border: 1px solid #ced4da;
     border-radius: .25rem;
+    font-size: 1rem;
     transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
     box-shadow: none;
-    appearance: none;
     -webkit-appearance: none;
     -moz-appearance: textfield;
 }
@@ -114,4 +134,33 @@ body {
 #interval::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
+}
+
+.quality-selection {
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.quality-selection label, .form-group label {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: var(--text-color-light);
+}
+
+/* Consistent Input & Dropdown Styling */
+.quality-dropdown, #interval {
+    background-color: var(--input-background-light);
+    border: 1px solid var(--border-color-light);
+    padding: 8px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.disclaimer {
+    color: var(--text-color-light);
+    margin-top: 5px;
+    font-size: 12px;
+    line-height: 1.5;
 }

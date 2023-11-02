@@ -29,24 +29,34 @@ $(document).ready(function () {
         $('#interval').val(interval / 1000);
     });
 
+    chrome.storage.sync.get('maxQuality', function (data) {
+        let maxQuality = data.maxQuality || '1080p';
+        debugger;
+        $('#max-quality').val(maxQuality);
+    });
+
+
     $('#save').on('click', function () {
         let interval = parseInt($('#interval').val(), 10) * 1000;
         chrome.storage.sync.set({'checkInterval': interval}, function () {
-            let messageDiv = $('#message');
-            messageDiv.show();
-            messageDiv[0].scrollIntoView({behavior: "smooth"});
+            let maxQuality = $('#max-quality').val();
+            chrome.storage.sync.set({'maxQuality': maxQuality}, function () {
+                let messageDiv = $('#message');
+                messageDiv.show();
+                messageDiv[0].scrollIntoView({behavior: "smooth"});
 
-            $(this).addClass('active-button');
+                $(this).addClass('active-button');
 
-            $('#interval').focus();
+                $('#interval').focus();
 
-            setTimeout(() => {
-                $(this).removeClass('active-button');
-            }, 100);
+                setTimeout(() => {
+                    $(this).removeClass('active-button');
+                }, 100);
 
-            setTimeout(() => {
-                window.close();
-            }, 3000);
+                setTimeout(() => {
+                    window.close();
+                }, 3000);
+            });
         });
     });
 });

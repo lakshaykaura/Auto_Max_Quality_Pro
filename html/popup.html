@@ -1,41 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <title>YouTube Max Quality Switcher Extension Settings</title>
-        <link rel="stylesheet" href="../styles/bootstrap_4.5.2_css_bootstrap.min.css">
-        <link rel="stylesheet" href="../styles/popup.css">
-    </head>
+<head>
+    <title>YouTube Max Quality Switcher Extension Settings</title>
+    <link rel="stylesheet" href="../styles/bootstrap_4.5.2_css_bootstrap.min.css">
+    <link rel="stylesheet" href="../styles/popup.css">
+</head>
 
-    <body class="p-3">
-        <div class="text-right donate-button-container">
-            <button id="donateBtn" class="btn btn-info btn-sm btn-xs">
-                <img src="../media/back-button.png" alt="Back" width="15px" class="back-button-img"/><span class="button-text">Donate Now</span></button>
-        </div>
-        <div id="donate-qr">
-            <img src="../media/qr_code.png" alt="Paytm QR Code" width="200px">
-        </div>
-        <div class="hideOnDonate">
-            <p><i>This extension will continuously monitor video links and as soon a new video is opened it will select
-                    <span style="color: rgb(252, 252, 212);">"Maximum Available Quality"</span>.</br>
-                    If user manually changes video quality later, the extension will wait for below configured seconds and
-                    then
-                    kick-in to re-select <span style="color: rgb(252, 252, 212);">"Maximum Available Quality"</span> for
-                    same
-                    video.</i></p>
-            <div class="form-group d-flex justify-content-between align-items-center">
-                <label for="interval" class="mb-0">Wait interval (in seconds):</label>
-                <input type="number" id="interval" min="1" class="form-control" style="width: 60%;">
-            </div>
-            <div class="text-center">
-                <button id="save" class="btn btn-success">Save</button>
-            </div>
-            <div id="message" class="alert alert-success mt-3" role="alert">
-                Settings saved!
-            </div>
-        </div>
-        <script src="../scripts/jquery-3.6.0.min.js"></script>
-        <script src="../scripts/popup.js"></script>
-    </body>
+<body class="p-3">
+<div class="text-right donate-button-container">
+    <button id="donateBtn" class="btn btn-info btn-sm btn-xs">
+        <img src="../media/back-button.png" alt="Back" width="15px" class="back-button-img"/><span class="button-text">Donate Now</span>
+    </button>
+</div>
+<div id="donate-qr">
+    <img src="../media/qr_code.png" alt="Paytm QR Code" width="200px">
+</div>
+<div class="hideOnDonate">
+    <div class="quality-selection">
+        <label for="max-quality">Preferred Video Quality:</label>
+        <select id="max-quality" name="max-quality" class="quality-dropdown">
+            <option value="highest">Highest Available</option>
+            <option value="4320p">4320p (8K)</option>
+            <option value="2160p">2160p (4K)</option>
+            <option value="1440p">1440p (QHD)</option>
+            <option value="1080p" selected>1080p (Full HD)</option>
+            <option value="720p">720p (HD)</option>
+            <option value="480p">480p</option>
+            <option value="360p">360p</option>
+            <option value="240p">240p</option>
+        </select>
+        <p class="disclaimer">
+            The extension will prioritize your selected quality if available. Otherwise, it will select the nearest
+            higher quality. In cases where higher qualities are not available, it will choose the highest available
+            quality.
+        </p>
+    </div>
+    <div class="form-group d-flex justify-content-between align-items-center">
+        <label for="interval" class="mb-0">Wait interval (in seconds):</label>
+        <input type="number" id="interval" min="1" class="form-control" style="width: 60%;">
+    </div>
+    <p class="disclaimer">This extension will continuously monitor video links and as soon as a new video is opened, it
+        will select your preferred quality setting or the highest available quality if your preferred option is not
+        available. If the user manually changes the video quality, the extension will respect that choice for the
+        duration set above. After the configured time elapses, the extension will step in to re-select your preferred
+        quality for the same video.</p>
+    <div class="text-center">
+        <button id="save" class="btn btn-success">Save</button>
+    </div>
+    <div id="message" class="alert alert-success mt-3" role="alert">
+        Settings saved!
+    </div>
+</div>
+<script src="../scripts/jquery-3.6.0.min.js"></script>
+<script src="../scripts/popup.js"></script>
+</body>
 
 </html>
