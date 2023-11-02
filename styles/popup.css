@@ -5,9 +5,10 @@
     --text-color-dark: #fff;
     --primary-color: #28a745;
     --donate-button-color: #ff5733;
-    --alert-color: #007bff;
+    --alert-color: #004286;
 }
 
+/* BASE STYLES */
 body {
     width: 300px;
     background-color: var(--background-color-light);
@@ -15,6 +16,7 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 
+/* DARK MODE STYLES */
 @media (prefers-color-scheme: dark) {
     body {
         background-color: var(--background-color-dark);
@@ -22,15 +24,19 @@ body {
     }
 }
 
-.btn-xs {
+/* BUTTON STYLES */
+.btn-xs, #donateBtn, .active-button, .back-button {
     padding: 0.25rem 0.5rem;
     font-size: 0.7875rem;
     line-height: 1.5;
     border-radius: 0.2rem;
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
     color: var(--text-color-dark);
     transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+.btn-xs {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
 }
 
 .btn-xs:hover {
@@ -38,6 +44,28 @@ body {
     border-color: #1e7e34;
 }
 
+#donateBtn {
+    background-color: var(--donate-button-color);
+    border-color: var(--donate-button-color);
+}
+
+#donateBtn:hover {
+    background-color: #e6281b;
+    border-color: #c92216;
+    transform: scale(1.05);
+}
+
+.active-button {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.back-button {
+    background-color: #048b7d !important;
+    border-color: #048b7d !important;
+}
+
+/* COMPONENTS & MISC STYLES */
 #message {
     margin-top: 15px;
     display: none;
@@ -51,47 +79,39 @@ body {
 #donate-qr {
     display: none;
     text-align: center;
-    margin-bottom: 15px;
-    margin-top: 20px;
+    margin: 20px 0 15px;
 }
 
 .donate-button-container {
     margin-bottom: 10px;
 }
 
-#donateBtn {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.7875rem;
-    line-height: 1.5;
-    border-radius: 0.2rem;
-    background-color: var(--donate-button-color);
-    border-color: var(--donate-button-color);
-    color: var(--text-color-dark);
-    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
-}
-
-#donateBtn:hover {
-    background-color: #e6281b;
-    border-color: #c92216;
-    transform: scale(1.05);
-}
-
-.active-button {
-    background-color: var(--primary-color) !important;
-    border-color: var(--primary-color) !important;
-    color: var(--text-color-dark) !important;
-    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
-}
-
-.back-button {
-    background-color: #048b7d !important;
-    border-color: #048b7d !important;
-    color: var(--text-color-dark) !important;
-    transition: background-color 0.3s, border-color 0.5s, color 0.3s;
-}
-
 .back-button-img {
     display: none;
     margin-right: 5px;
     margin-bottom: 2px;
+}
+
+#interval {
+    font-size: 1rem;
+    padding: .5rem .75rem;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    box-shadow: none;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+}
+
+#interval:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25);
+}
+
+#interval::-webkit-outer-spin-button,
+#interval::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
