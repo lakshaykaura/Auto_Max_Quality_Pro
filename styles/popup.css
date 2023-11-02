@@ -10,6 +10,7 @@
     --primary-color: #28a745;
     --donate-button-color: #ff5733;
     --alert-color: #004286;
+    --secondary-color: #048b7d;
 }
 
 /* BASE STYLES */
@@ -20,33 +21,8 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 
-/* DARK MODE STYLES */
-@media (prefers-color-scheme: dark) {
-    body {
-        background-color: var(--background-color-dark);
-        color: var(--text-color-dark);
-    }
-
-    .quality-dropdown, #interval {
-        background-color: var(--input-background-dark);
-        border: 1px solid var(--border-color-dark);
-    }
-
-    .disclaimer {
-        color: var(--text-color-dark) !important;
-    }
-
-    .quality-selection label, .form-group label {
-        color: var(--text-color-dark) !important;
-    }
-
-    .btn-xs, #donateBtn, .active-button, .back-button {
-        color: var(--text-color-dark) !important;
-    }
-}
-
 /* BUTTON STYLES */
-.btn-xs, #donateBtn, .active-button, .back-button {
+.btn-xs, button#donateBtn, .active-button, .back-button {
     padding: 0.25rem 0.5rem;
     font-size: 0.7875rem;
     line-height: 1.5;
@@ -64,25 +40,25 @@ body {
     border-color: #1e7e34;
 }
 
-#donateBtn {
+button#donateBtn {
     background-color: var(--donate-button-color);
     border-color: var(--donate-button-color);
 }
 
-#donateBtn:hover {
+button#donateBtn:hover {
     background-color: #e6281b;
     border-color: #c92216;
     transform: scale(1.05);
 }
 
-.active-button {
-    background-color: var(--primary-color) !important;
-    border-color: var(--primary-color) !important;
+button#donateBtn.back-button {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
 }
 
-.back-button {
-    background-color: #048b7d !important;
-    border-color: #048b7d !important;
+button#donateBtn.active-button, button#save.active-button {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
 }
 
 /* COMPONENTS & MISC STYLES */
@@ -163,4 +139,50 @@ body {
     margin-top: 5px;
     font-size: 12px;
     line-height: 1.5;
+}
+
+/* DARK MODE STYLES */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: var(--background-color-dark);
+        color: var(--text-color-dark);
+    }
+
+    .quality-dropdown, #interval {
+        color: var(--text-color-dark);
+        background-color: var(--input-background-dark);
+        border: 1px solid var(--border-color-dark);
+    }
+
+    .disclaimer {
+        color: var(--text-color-dark);
+    }
+
+    .quality-selection label, .form-group label {
+        color: var(--text-color-dark);
+    }
+
+    .btn-xs, button#donateBtn, .active-button, .back-button {
+        color: var(--text-color-dark);
+    }
+
+    .btn-xs {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    button#donateBtn {
+        background-color: var(--donate-button-color);
+        border-color: var(--donate-button-color);
+    }
+
+    button#donateBtn.active-button, button#save.active-button {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    button#donateBtn.back-button {
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+    }
 }
