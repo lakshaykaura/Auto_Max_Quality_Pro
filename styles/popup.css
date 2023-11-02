@@ -1,45 +1,188 @@
+:root {
+    --background-color-light: #fff;
+    --text-color-light: #333;
+    --input-background-light: #fff;
+    --border-color-light: #ced4da;
+    --background-color-dark: #343a40;
+    --text-color-dark: #fff;
+    --input-background-dark: #495057;
+    --border-color-dark: #495057;
+    --primary-color: #28a745;
+    --donate-button-color: #ff5733;
+    --alert-color: #004286;
+    --secondary-color: #048b7d;
+}
+
+/* BASE STYLES */
 body {
     width: 300px;
+    background-color: var(--background-color-light);
+    color: var(--text-color-light);
+    transition: background-color 0.3s, color 0.3s;
 }
 
-/* Dark mode styling */
-@media (prefers-color-scheme: dark) {
-    body {
-        background-color: #343a40;
-        color: #fff;
-    }
-
-    .form-control {
-        background-color: #495057;
-        color: #fff;
-        border-color: #6c757d;
-    }
-
-    .btn-success {
-        background-color: #28a745;
-        border-color: #28a745;
-    }
-}
-
-/* Extra small button */
-.btn-xs {
+/* BUTTON STYLES */
+.btn-xs, button#donateBtn, .active-button, .back-button {
     padding: 0.25rem 0.5rem;
     font-size: 0.7875rem;
     line-height: 1.5;
     border-radius: 0.2rem;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+.btn-xs {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-xs:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+button#donateBtn {
+    background-color: var(--donate-button-color);
+    border-color: var(--donate-button-color);
+}
+
+button#donateBtn:hover {
+    background-color: #e6281b;
+    border-color: #c92216;
+    transform: scale(1.05);
+}
+
+button#donateBtn.back-button {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+button#donateBtn.active-button, button#save.active-button {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* COMPONENTS & MISC STYLES */
+#message, #donate-qr {
+    margin-top: 15px;
+    display: none;
+    text-align: center;
 }
 
 #message {
-    margin-top: 15px;
-    display: none;
+    background-color: var(--alert-color);
+    color: var(--text-color-dark);
+    padding: 5px 10px;
+    border-radius: 4px;
 }
 
 #donate-qr {
-    display: none;
-    text-align: center;
-    margin-bottom: 15px;
+    margin: 20px 0 15px;
 }
 
 .donate-button-container {
     margin-bottom: 10px;
+}
+
+.back-button-img {
+    display: none;
+    margin-right: 5px;
+    margin-bottom: 2px;
+}
+
+#interval {
+    padding: .5rem .75rem;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    font-size: 1rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    box-shadow: none;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+}
+
+#interval:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25);
+}
+
+#interval::-webkit-outer-spin-button,
+#interval::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.quality-selection {
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.quality-selection label, .form-group label {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: var(--text-color-light);
+}
+
+/* Consistent Input & Dropdown Styling */
+.quality-dropdown, #interval {
+    background-color: var(--input-background-light);
+    border: 1px solid var(--border-color-light);
+    padding: 8px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.disclaimer {
+    color: var(--text-color-light);
+    margin-top: 5px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* DARK MODE STYLES */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: var(--background-color-dark);
+        color: var(--text-color-dark);
+    }
+
+    .quality-dropdown, #interval {
+        color: var(--text-color-dark);
+        background-color: var(--input-background-dark);
+        border: 1px solid var(--border-color-dark);
+    }
+
+    .disclaimer {
+        color: var(--text-color-dark);
+    }
+
+    .quality-selection label, .form-group label {
+        color: var(--text-color-dark);
+    }
+
+    .btn-xs, button#donateBtn, .active-button, .back-button {
+        color: var(--text-color-dark);
+    }
+
+    .btn-xs {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    button#donateBtn {
+        background-color: var(--donate-button-color);
+        border-color: var(--donate-button-color);
+    }
+
+    button#donateBtn.active-button, button#save.active-button {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    button#donateBtn.back-button {
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+    }
 }
