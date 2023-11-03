@@ -10,16 +10,16 @@
 <body class="p-3">
 <div class="text-right donate-button-container">
     <button id="donateBtn" class="btn btn-info btn-sm btn-xs">
-        <img src="../media/back-button.png" alt="Back" width="15px" class="back-button-img"/><span class="button-text">Donate Now</span>
+        <img src="../media/back-button.png" alt="Back" width="15px" class="back-button-img"/><span class="button-text">Donate</span>
     </button>
 </div>
 <div id="donate-qr">
     <img src="../media/qr_code.png" alt="Paytm QR Code" width="200px">
 </div>
-<div class="hideOnDonate">
-    <div class="quality-selection">
-        <label for="max-quality">Preferred Video Quality:</label>
-        <select id="max-quality" name="max-quality" class="quality-dropdown">
+<div class="hide-on-donate-click">
+    <div class="form-group d-flex justify-content-between align-items-center quality-selection">
+        <label for="max-quality" class="mb-0">Preferred Video Quality:</label>
+        <select id="max-quality" name="max-quality" class="quality-dropdown form-control" style="width: 60%;">
             <option value="highest">Highest Available</option>
             <option value="4320p">4320p (8K)</option>
             <option value="2160p">2160p (4K)</option>
@@ -30,12 +30,12 @@
             <option value="360p">360p</option>
             <option value="240p">240p</option>
         </select>
-        <p class="disclaimer">
-            The extension will prioritize your selected quality if available. Otherwise, it will select the nearest
-            higher quality. In cases where higher qualities are not available, it will choose the highest available
-            quality.
-        </p>
     </div>
+    <p class="disclaimer">
+        The extension will prioritize your selected quality if available. Otherwise, it will select the nearest
+        higher quality. In cases where higher qualities are not available, it will choose the highest available
+        quality.
+    </p>
     <div class="form-group d-flex justify-content-between align-items-center">
         <label for="interval" class="mb-0">Wait interval (in seconds):</label>
         <input type="number" id="interval" min="1" class="form-control" style="width: 60%;">
@@ -52,6 +52,15 @@
         Settings saved!
     </div>
 </div>
+<footer class="statistics-footer">
+    <span id="qualityChangesCount">Automatically switched video quality:
+        <span class="nowrap font-weight-bold"> for You</span>
+    </span>
+    <br>
+    <span id="mostCommonQuality">Most frequent switched quality is:
+        <span class="nowrap font-weight-bold"></span>.
+    </span>
+</footer>
 <script src="../scripts/jquery-3.6.0.min.js"></script>
 <script src="../scripts/popup.js"></script>
 </body>

@@ -49,11 +49,14 @@ accurately describe the nature of the update:
 Our repository employs a GitHub Actions workflow that automates versioning within our `manifest.json`. This automation
 bases its version adjustments on the patterns identified in commit messages:
 
-- **Major Version Bump (e.g., `1.x.y` to `2.0.0`)**: Initiated by commit messages containing the `Release: ` keyword.
+- **Major Version Bump (e.g., `1.x.y` to `2.0.0`)**:
+  Initiated by commit messages containing the following:
+    - `Release: `
+    - `Major Update: `
 
 - **Minor Version Bump (e.g., `1.1.y` to `1.2.0`)**:
   This can be triggered by several commit messages including:
-    - `Major Update: `
+    - `Minor Update: `
     - `New Feature: `
     - `Improvement: `
     - `Performance: `
@@ -63,7 +66,6 @@ bases its version adjustments on the patterns identified in commit messages:
 
 - **Patch Version Bump (e.g., `1.2.10` to `1.2.11`)**:
   Triggered by other commit messages such as:
-    - `Minor Update: `
     - `Documentation Update: `
     - `Build: `
     - `CI: `

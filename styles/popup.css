@@ -11,17 +11,17 @@
     --donate-button-color: #ff5733;
     --alert-color: #004286;
     --secondary-color: #048b7d;
+    --footer-stats-light-color: #af9c22;
+    --footer-stats-dark-color: #979691;
 }
 
-/* BASE STYLES */
 body {
-    width: 300px;
+    width: 330px;
     background-color: var(--background-color-light);
     color: var(--text-color-light);
     transition: background-color 0.3s, color 0.3s;
 }
 
-/* BUTTON STYLES */
 .btn-xs, button#donateBtn, .active-button, .back-button {
     padding: 0.25rem 0.5rem;
     font-size: 0.7875rem;
@@ -112,24 +112,22 @@ button#donateBtn.active-button, button#save.active-button {
     margin: 0;
 }
 
-.quality-selection {
+div.quality-selection {
     margin: 10px 0;
-    display: flex;
-    flex-direction: column;
+    display: flow-root;
 }
 
 .quality-selection label, .form-group label {
     font-size: 14px;
     font-weight: bold;
     margin-bottom: 5px;
+    margin-right: 5px;
     color: var(--text-color-light);
 }
 
-/* Consistent Input & Dropdown Styling */
 .quality-dropdown, #interval {
     background-color: var(--input-background-light);
     border: 1px solid var(--border-color-light);
-    padding: 8px;
     border-radius: 5px;
     font-size: 14px;
 }
@@ -137,8 +135,28 @@ button#donateBtn.active-button, button#save.active-button {
 .disclaimer {
     color: var(--text-color-light);
     margin-top: 5px;
+    margin-bottom: 25px;
     font-size: 12px;
     line-height: 1.5;
+}
+
+.hide-on-donate-click, .text-center {
+    margin-top: 1.5rem;
+}
+
+.statistics-footer {
+    background-color: var(--background-color-light);
+    color: var(--footer-stats-dark-color);
+    padding-top: 8px;
+    margin-top: 12px;
+    border-top: 1px solid var(--border-color-light);
+    text-align: center;
+    font-size: 9px;
+    line-height: 1.8;
+}
+
+.nowrap {
+    white-space: nowrap;
 }
 
 /* DARK MODE STYLES */
@@ -184,5 +202,11 @@ button#donateBtn.active-button, button#save.active-button {
     button#donateBtn.back-button {
         background-color: var(--secondary-color);
         border-color: var(--secondary-color);
+    }
+
+    .statistics-footer {
+        background-color: var(--background-color-dark);
+        color: var(--footer-stats-light-color);
+        border-top: 1px solid var(--border-color-dark);
     }
 }
