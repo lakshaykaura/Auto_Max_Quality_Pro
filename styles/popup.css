@@ -152,6 +152,7 @@ div.quality-selection {
     border-top: 1px solid var(--border-color-light);
     text-align: center;
     font-size: 9px;
+    font-weight: 600;
     line-height: 1.8;
 }
 
