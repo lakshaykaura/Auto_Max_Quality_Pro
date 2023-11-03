@@ -160,6 +160,42 @@ div.quality-selection {
     white-space: nowrap;
 }
 
+@keyframes fadeInOut {
+    0% {
+        opacity: 1;
+        z-index: 9999;
+    }
+    100% {
+        opacity: 0.1;
+        z-index: -1;
+    }
+}
+
+.blur-content {
+    filter: blur(5px);
+}
+
+.no-blur {
+    filter: blur(0px);
+}
+
+.background-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 256px;
+    height: 256px;
+    margin-left: -128px;
+    margin-top: -128px;
+    background-image: url('../media/icon256.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    animation-name: fadeInOut;
+    animation-duration: 1.5s;
+    animation-fill-mode: forwards;
+}
+
 /* DARK MODE STYLES */
 @media (prefers-color-scheme: dark) {
     body {
@@ -167,10 +203,16 @@ div.quality-selection {
         color: var(--text-color-dark);
     }
 
-    .quality-dropdown, #interval {
+    .quality-dropdown, .quality-dropdown:active, .quality-dropdown:focus,
+    #interval, #interval:active, #interval:focus {
         color: var(--text-color-dark);
         background-color: var(--input-background-dark);
         border: 1px solid var(--border-color-dark);
+    }
+
+    .quality-dropdown option {
+        background-color: var(--input-background-dark);
+        color: var(--text-color-dark);
     }
 
     .disclaimer {

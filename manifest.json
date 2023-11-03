@@ -38,8 +38,7 @@
     "48": "./media/icon48.png",
     "128": "./media/icon128.png",
     "256": "./media/icon256.png",
-    "512": "./media/icon512.png",
-    "1024": "./media/icon1024.png"
+    "512": "./media/icon512.png"
   },
   "action": {
     "default_icon": {
@@ -47,8 +46,7 @@
       "48": "./media/icon48.png",
       "128": "./media/icon128.png",
       "256": "./media/icon256.png",
-      "512": "./media/icon512.png",
-      "1024": "./media/icon1024.png"
+      "512": "./media/icon512.png"
     },
     "default_popup": "./html/popup.html"
   }
