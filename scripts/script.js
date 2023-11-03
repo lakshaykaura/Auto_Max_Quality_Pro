@@ -7,6 +7,22 @@ function getIntervalAndRun() {
     });
 }
 
+function incrementQualityChangeCount() {
+    chrome.storage.sync.get({qualityChangeCount: 0}, function (result) {
+        let count = result.qualityChangeCount;
+        count++;
+        chrome.storage.sync.set({qualityChangeCount: count});
+    });
+}
+
+function trackMostCommonQuality(quality) {
+    chrome.storage.sync.get({qualityFrequency: {}}, function (result) {
+        let frequency = result.qualityFrequency;
+        frequency[quality] = (frequency[quality] || 0) + 1;
+        chrome.storage.sync.set({qualityFrequency: frequency});
+    });
+}
+
 function showSuccessMessage(selectedQuality, videoFrame) {
     const successMessage = $('<div>', {
         id: 'success-message',
@@ -87,6 +103,8 @@ window.checkAndAdjustYouTubeVideoQuality = function (interval) {
                                 }
 
                                 selectedQuality.click();
+                                trackMostCommonQuality(selectedQuality.text().trim());
+                                incrementQualityChangeCount();
                                 const videoFrame = selectedQuality.parents('div.html5-video-player');
                                 showSuccessMessage(selectedQuality.text().trim(), videoFrame);
                                 console.log(`YouTube Max Quality Switcher Extension: Changed quality to ${selectedQuality.text().trim()} for: ${getYouTubeTitle()}`);
