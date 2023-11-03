@@ -71,3 +71,24 @@ $(document).ready(function () {
         });
     });
 });
+document.addEventListener('DOMContentLoaded', () => {
+    const backgroundImage = document.createElement('div');
+    backgroundImage.classList.add('background-image');
+    document.body.prepend(backgroundImage);
+
+    Array.from(document.body.children).forEach(child => {
+        if (!child.classList.contains('background-image')) {
+            child.classList.add('blur-content');
+        }
+    });
+
+    backgroundImage.addEventListener('animationend', () => {
+        Array.from(document.body.children).forEach(child => {
+            if (!child.classList.contains('background-image')) {
+                child.classList.remove('blur-content');
+                child.classList.add('no-blur');
+            }
+        });
+    });
+});
+
