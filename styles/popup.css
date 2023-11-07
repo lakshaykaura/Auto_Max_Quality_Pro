@@ -192,7 +192,7 @@ div.quality-selection {
     background-repeat: no-repeat;
     background-size: contain;
     animation-name: fadeInOut;
-    animation-duration: 1.5s;
+    animation-duration: 0.7s;
     animation-fill-mode: forwards;
 }
 
