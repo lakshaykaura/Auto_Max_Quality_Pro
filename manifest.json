@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Auto Max Quality Pro",
-  "version": "1.9.1",
+  "version": "2.0.0",
   "description": "Automatically switches YouTube & Other videos to the highest/selected available quality.",
   "permissions": [
     "storage",
