@@ -1,0 +1,119 @@
+/* COMPONENTS & MISC STYLES */
+#message, #donate-qr {
+    margin-top: 15px;
+    display: none;
+    text-align: center;
+}
+
+#message {
+    background-color: var(--alert-color);
+    color: var(--text-color-dark);
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+#donate-qr {
+    margin: 20px 0 15px;
+}
+
+.donate-button-container {
+    margin-bottom: 10px;
+}
+
+.back-btn-img {
+    display: none;
+    margin-right: 5px;
+    margin-bottom: 2px;
+}
+
+.donate-btn-class-light {
+    margin-right: 5px;
+    margin-bottom: 2px;
+}
+
+#interval {
+    padding: .5rem .75rem;
+    border-radius: .25rem;
+    font-size: 1rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    box-shadow: none;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+}
+
+#interval:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25);
+}
+
+#interval::-webkit-outer-spin-button,
+#interval::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+div.quality-selection {
+    margin: 10px 0;
+    display: flow-root;
+}
+
+.quality-selection label, .form-group label {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-right: 5px;
+}
+
+.quality-dropdown, #interval {
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.disclaimer {
+    margin-top: 5px;
+    margin-bottom: 25px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.hide-on-donate-click, .text-center {
+    margin-top: 1.5rem;
+}
+
+.statistics-footer {
+    padding-top: 8px;
+    margin-top: 12px;
+    text-align: center;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.8;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+.blur-content {
+    filter: blur(5px);
+}
+
+.no-blur {
+    filter: blur(0px);
+}
+
+.background-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 256px;
+    height: 256px;
+    margin-left: -128px;
+    margin-top: -128px;
+    background-image: url('../media/icon256.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    animation: spinner-grow 0.75s ease forwards, fadeOutAndBlur 0.8s ease forwards;
+    animation-delay: 0s, 0.75s;
+}

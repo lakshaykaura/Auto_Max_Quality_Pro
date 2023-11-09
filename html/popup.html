@@ -3,14 +3,25 @@
 
 <head>
     <title>Auto Max Quality Pro Extension Settings</title>
-    <link rel="stylesheet" href="../styles/bootstrap_4.5.2_css_bootstrap.min.css">
-    <link rel="stylesheet" href="../styles/popup.css">
+    <link rel="stylesheet" href="../styles/libs/bootstrap_4.5.2_css_bootstrap.min.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/buttons.css">
+    <link rel="stylesheet" href="../styles/animations.css">
+    <link rel="stylesheet" href="../styles/custom.css">
+    <link rel="stylesheet" href="../styles/light-theme.css">
+    <link rel="stylesheet" href="../styles/dark-theme.css">
+    <script src="../scripts/common.js"></script>
 </head>
 
 <body class="p-3">
 <div class="text-right donate-button-container">
     <button id="donateBtn" class="btn btn-info btn-sm btn-xs">
-        <img src="../media/back-button.png" alt="Back" width="15px" class="back-button-img"/><span class="button-text">Donate</span>
+        <img src="../media/donate-heart-light.png" alt="Donate" width="15px"
+             class="donate-btn-class show-in-dark-theme"/>
+        <img src="../media/donate-heart-dark.png" alt="Donate" width="15px"
+             class="donate-btn-class show-in-light-theme"/>
+        <img src="../media/back-button.png" alt="Back" width="15px" class="back-btn-img"/>
+        <span class="button-text">Donate</span>
     </button>
 </div>
 <div id="donate-qr">
@@ -61,7 +72,7 @@
         <span class="nowrap font-weight-bold"></span>.
     </span>
 </footer>
-<script src="../scripts/jquery-3.6.0.min.js"></script>
+<script src="../scripts/libs/jquery-3.6.0.min.js"></script>
 <script src="../scripts/popup.js"></script>
 </body>
 

@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    //Donate Btn Logic
     $('#donateBtn').on('click', function () {
         let qrCode = $('#donate-qr');
         qrCode.toggle();
@@ -6,13 +7,25 @@ $(document).ready(function () {
         let otherOptionsDiv = $('div.hide-on-donate-click');
         otherOptionsDiv.toggle();
 
-        let backButtonImage = $('.back-button-img');
+        let backButtonImage = $('.back-btn-img');
         backButtonImage.toggle();
+
+        $(document).find('.donate-btn-class').each(function () {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                if ($(this).hasClass('show-in-dark-theme')) {
+                    $(this).toggle();
+                }
+            } else {
+                if ($(this).hasClass('show-in-light-theme')) {
+                    $(this).toggle();
+                }
+            }
+        });
 
         $(this).toggleClass('active-button');
         if ($(this).hasClass('back-button')) {
             $(this).removeClass('back-button');
-            $('.button-text', this).text("Donate Now");
+            $('.button-text', this).text("Donate");
             $('#interval').focus();
         } else {
             $(this).addClass('back-button');
@@ -36,17 +49,19 @@ $(document).ready(function () {
         $('#mostCommonQuality').find('span.nowrap').text(`${mostCommonQuality || 'None'}`);
     });
 
+    // Fetch and display the current interval
     chrome.storage.sync.get('checkInterval', function (data) {
         let interval = data.checkInterval || 60000;
         $('#interval').val(interval / 1000);
     });
 
+    //Fetch and display the current max quality
     chrome.storage.sync.get('maxQuality', function (data) {
         let maxQuality = data.maxQuality || '1080p';
-        debugger;
         $('#max-quality').val(maxQuality);
     });
 
+    // Save the interval and selected max quality
     $('#save').on('click', function () {
         let interval = parseInt($('#interval').val(), 10) * 1000;
         chrome.storage.sync.set({'checkInterval': interval}, function () {
@@ -72,6 +87,7 @@ $(document).ready(function () {
     });
 });
 
+//Logic to blur the background image on popup open
 document.addEventListener('DOMContentLoaded', () => {
     const backgroundImage = document.createElement('div');
     backgroundImage.classList.add('background-image');

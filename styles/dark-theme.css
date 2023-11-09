@@ -1,0 +1,65 @@
+@media (prefers-color-scheme: dark) {
+
+    .show-in-light-theme {
+        display: none;
+    }
+
+    .show-in-dark-theme {
+        display: inherit;
+    }
+
+    body {
+        background-color: var(--background-color-dark);
+        color: var(--text-color-dark);
+    }
+
+    .quality-dropdown, .quality-dropdown:active, .quality-dropdown:focus,
+    #interval, #interval:active, #interval:focus {
+        color: var(--text-color-dark);
+        background-color: var(--input-background-dark);
+        border: 1px solid var(--border-color-dark);
+    }
+
+    .quality-dropdown option {
+        background-color: var(--input-background-dark);
+        color: var(--text-color-dark);
+    }
+
+    .disclaimer {
+        color: var(--text-color-dark);
+    }
+
+    .quality-selection label, .form-group label {
+        color: var(--text-color-dark);
+    }
+
+    .btn-xs, button#donateBtn, .active-button, .back-button {
+        color: var(--text-color-dark);
+    }
+
+    .btn-xs {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    button#donateBtn {
+        background-color: var(--donate-button-color);
+        border-color: var(--donate-button-color);
+    }
+
+    button#donateBtn.active-button, button#save.active-button {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    button#donateBtn.back-button {
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+    }
+    
+    .statistics-footer {
+        background-color: var(--background-color-dark);
+        color: var(--footer-stats-light-color);
+        border-top: 1px solid var(--border-color-dark);
+    }
+}
