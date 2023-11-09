@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "YouTube Max Quality Switcher",
+  "name": "Auto Max Quality Pro",
   "version": "1.9.0",
-  "description": "Automatically switches YouTube videos to the highest available quality.",
+  "description": "Automatically switches YouTube & Other videos to the highest/selected available quality.",
   "permissions": [
     "storage",
     "activeTab",
@@ -14,8 +14,10 @@
         "<all_urls>"
       ],
       "js": [
-        "./scripts/jquery-3.6.0.min.js",
-        "./scripts/script.js"
+        "./scripts/libs/jquery-3.6.0.min.js",
+        "./scripts/common.js",
+        "./scripts/main.js",
+        "./scripts/youtube.js"
       ],
       "all_frames": true
     }
@@ -26,7 +28,6 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "./styles/bootstrap_4.5.2_css_bootstrap.min.css"
       ],
       "matches": [
         "<all_urls>"

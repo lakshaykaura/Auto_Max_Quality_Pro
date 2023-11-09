@@ -2,11 +2,11 @@ name: Version Updates
 
 on:
   pull_request:
-    types: [closed]
+    types: [ closed ]
     branches:
       - master
 
-concurrency: 
+concurrency:
   group: version-bump
   cancel-in-progress: true
 
@@ -39,7 +39,7 @@ jobs:
           sudo apt update
           sudo apt install -y gh
           gh auth login --with-token <<< "${{ secrets.github_token }}"
-          
+
       - name: Get version bump label from PR
         id: get-bump-label
         run: |
@@ -94,7 +94,7 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git remote set-url origin https://${{ secrets.github_token }}@github.com/lakshaykaura/YouTube_Max_Quality_Switcher.git
+          git remote set-url origin https://${{ secrets.github_token }}@github.com/lakshaykaura/Auto_Max_Quality_Pro.git
           git add manifest.json
           git commit -m "Artifact version bumped to ${{ env.NEW_ARTIFACT_VERSION }} in manifest.json [auto-bump]"
           git push origin HEAD:${{ github.ref }}

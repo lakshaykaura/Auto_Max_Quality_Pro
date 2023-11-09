@@ -1,0 +1,37 @@
+@media (prefers-color-scheme: light) {
+    .show-in-light-theme {
+        display: inherit;
+    }
+
+    .show-in-dark-theme {
+        display: none;
+    }
+
+    body {
+        background-color: var(--background-color-light);
+        color: var(--text-color-light);
+    }
+
+    #interval {
+        border: 1px solid #ced4da;
+    }
+
+    .quality-dropdown, #interval {
+        background-color: var(--input-background-light);
+        border: 1px solid var(--border-color-light);
+    }
+
+    .disclaimer {
+        color: var(--text-color-light);
+    }
+
+    .quality-selection label, .form-group label {
+        color: var(--text-color-light);
+    }
+
+    .statistics-footer {
+        background-color: var(--background-color-light);
+        color: var(--footer-stats-dark-color);
+        border-top: 1px solid var(--border-color-light);
+    }
+}

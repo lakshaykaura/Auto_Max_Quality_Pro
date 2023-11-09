@@ -1,0 +1,38 @@
+.btn-xs, button#donateBtn, .active-button, .back-button {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7875rem;
+    line-height: 1.5;
+    border-radius: 0.2rem;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+.btn-xs {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-xs:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+button#donateBtn {
+    background-color: var(--donate-button-color);
+    border-color: var(--donate-button-color);
+}
+
+button#donateBtn:hover {
+    background-color: #e6281b;
+    border-color: #c92216;
+    transform: scale(1.05);
+}
+
+button#donateBtn.back-button {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+button#donateBtn.active-button, button#save.active-button {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
