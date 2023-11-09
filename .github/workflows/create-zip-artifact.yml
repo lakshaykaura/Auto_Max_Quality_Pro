@@ -1,10 +1,10 @@
 name: Create Zip Artifact
 
 on:
-    workflow_run:
-        workflows: ["Version Updates"]
-        types:
-            - completed
+  workflow_run:
+    workflows: [ "Version Updates" ]
+    types:
+      - completed
 
 jobs:
   artifact-zip:
@@ -12,47 +12,47 @@ jobs:
     permissions: write-all
     if: github.event.workflow_run.conclusion == 'success'
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Extract version from manifest.json
-      run: |
-         sudo apt-get install -y jq
-         VERSION=$(jq -r .version manifest.json)
-         echo "CURRENT_RELEASE_VERSION=$VERSION" >> $GITHUB_ENV
+      - name: Extract version from manifest.json
+        run: |
+          sudo apt-get install -y jq
+          VERSION=$(jq -r .version manifest.json)
+          echo "CURRENT_RELEASE_VERSION=$VERSION" >> $GITHUB_ENV
 
-    - name: Create directory for artifact and copy specific files
-      run: |
-        mkdir YouTube_Max_Quality_Switcher_v${CURRENT_RELEASE_VERSION}
-        cp manifest.json YouTube_Max_Quality_Switcher_v${CURRENT_RELEASE_VERSION}
-        cp -r ./scripts ./media ./html ./styles YouTube_Max_Quality_Switcher_v${CURRENT_RELEASE_VERSION}/
+      - name: Create directory for artifact and copy specific files
+        run: |
+          mkdir Auto_Max_Quality_Pro_v${CURRENT_RELEASE_VERSION}
+          cp manifest.json Auto_Max_Quality_Pro_v${CURRENT_RELEASE_VERSION}
+          cp -r ./scripts ./media ./html ./styles Auto_Max_Quality_Pro_v${CURRENT_RELEASE_VERSION}/
 
-    - name: Ensure artifacts directory exists
-      run: mkdir -p ./artifacts/
-      
-    - name: Zip the directory
-      run: |
-        zip -r ./artifacts/YouTube_Max_Quality_Switcher_v${CURRENT_RELEASE_VERSION}.zip YouTube_Max_Quality_Switcher_v${CURRENT_RELEASE_VERSION}
+      - name: Ensure artifacts directory exists
+        run: mkdir -p ./artifacts/
 
-    - name: Archive old artifacts
-      run: |
-        mkdir -p ./artifacts/archives/
-        ARTIFACTS=(./artifacts/*.zip)
-        NUM_ARTIFACTS=${#ARTIFACTS[@]}
-        MAX_ARTIFACTS=3
+      - name: Zip the directory
+        run: |
+          zip -r ./artifacts/Auto_Max_Quality_Pro_v${CURRENT_RELEASE_VERSION}.zip Auto_Max_Quality_Pro_v${CURRENT_RELEASE_VERSION}
 
-        if (( NUM_ARTIFACTS > MAX_ARTIFACTS )); then
-          TO_ARCHIVE=$((NUM_ARTIFACTS - MAX_ARTIFACTS))
-          for artifact in "${ARTIFACTS[@]:0:$TO_ARCHIVE}"; do
-            mv "$artifact" ./artifacts/archives/
-          done
-        fi
+      - name: Archive old artifacts
+        run: |
+          mkdir -p ./artifacts/archives/
+          ARTIFACTS=(./artifacts/*.zip)
+          NUM_ARTIFACTS=${#ARTIFACTS[@]}
+          MAX_ARTIFACTS=3
+          
+          if (( NUM_ARTIFACTS > MAX_ARTIFACTS )); then
+            TO_ARCHIVE=$((NUM_ARTIFACTS - MAX_ARTIFACTS))
+            for artifact in "${ARTIFACTS[@]:0:$TO_ARCHIVE}"; do
+              mv "$artifact" ./artifacts/archives/
+            done
+          fi
 
-    - name: Commit and push artifact changes
-      run: |
-        git config user.name "GitHub Actions"
-        git config user.email "actions@github.com"
-        git remote set-url origin https://${{ secrets.github_token }}@github.com/lakshaykaura/YouTube_Max_Quality_Switcher.git
-        git add ./artifacts/
-        git commit -m "New Artifact created and older ones were archived! [auto-bump]"
-        git push origin HEAD:${{ github.ref }}
+      - name: Commit and push artifact changes
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git remote set-url origin https://${{ secrets.github_token }}@github.com/lakshaykaura/Auto_Max_Quality_Pro.git
+          git add ./artifacts/
+          git commit -m "New Artifact created and older ones were archived! [auto-bump]"
+          git push origin HEAD:${{ github.ref }}

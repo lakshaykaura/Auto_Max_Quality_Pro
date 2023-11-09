@@ -27,7 +27,7 @@ function showSuccessMessage(selectedQuality, videoFrame) {
     const successMessage = $('<div>', {
         id: 'success-message',
         class: 'success-message',
-        text: `"YouTube Max Quality Switcher" automatically switched quality to ${selectedQuality}`
+        text: `"Auto Max Quality Pro" automatically switched quality to ${selectedQuality}`
     }).css({
         position: 'absolute',
         top: '5%',
@@ -107,7 +107,7 @@ window.checkAndAdjustYouTubeVideoQuality = function (interval) {
                                 incrementQualityChangeCount();
                                 const videoFrame = selectedQuality.parents('div.html5-video-player');
                                 showSuccessMessage(selectedQuality.text().trim(), videoFrame);
-                                console.log(`YouTube Max Quality Switcher Extension: Changed quality to ${selectedQuality.text().trim()} for: ${getYouTubeTitle()}`);
+                                console.log(`Auto Max Quality Pro Extension: Changed quality to ${selectedQuality.text().trim()} for: ${getYouTubeTitle()}`);
                             }
 
                             // Close settings panel
@@ -130,7 +130,7 @@ window.checkAndAdjustYouTubeVideoQuality = function (interval) {
     const settingsButton = $('button.ytp-settings-button');
     if (settingsButton.length) {
         settingsButton.on('click', function () {
-            console.log(`YouTube Max Quality Switcher Extension: Clicked settings button for: ${getYouTubeTitle()}`);
+            console.log(`Auto Max Quality Pro Extension: Clicked settings button for: ${getYouTubeTitle()}`);
             shouldAdjustQuality = true;
             clearTimeout(timer);
             timer = setTimeout(adjustQuality, interval);

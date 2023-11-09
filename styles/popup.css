@@ -3,10 +3,10 @@
     --text-color-light: #333;
     --input-background-light: #fff;
     --border-color-light: #ced4da;
-    --background-color-dark: #343a40;
+    --background-color-dark: #000000;
     --text-color-dark: #fff;
-    --input-background-dark: #495057;
-    --border-color-dark: #495057;
+    --input-background-dark: #3c3c3d;
+    --border-color-dark: #000000;
     --primary-color: #28a745;
     --donate-button-color: #ff5733;
     --alert-color: #004286;
@@ -160,13 +160,30 @@ div.quality-selection {
     white-space: nowrap;
 }
 
-@keyframes fadeInOut {
+@keyframes spinner-grow {
+    0% {
+        transform: scale(0);
+        z-index: -1;
+    }
+    50% {
+        transform: scale(1);
+        z-index: 9999;
+    }
+    100% {
+        transform: scale(1);
+        z-index: 9999;
+    }
+}
+
+@keyframes fadeOutAndBlur {
     0% {
         opacity: 1;
+        filter: blur(1px);
         z-index: 9999;
     }
     100% {
         opacity: 0.1;
+        filter: blur(10px);
         z-index: -1;
     }
 }
@@ -191,9 +208,8 @@ div.quality-selection {
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
-    animation-name: fadeInOut;
-    animation-duration: 0.7s;
-    animation-fill-mode: forwards;
+    animation: spinner-grow 0.75s ease forwards, fadeOutAndBlur 0.8s ease forwards;
+    animation-delay: 0s, 0.75s;
 }
 
 /* DARK MODE STYLES */

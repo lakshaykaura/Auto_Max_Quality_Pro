@@ -1,6 +1,6 @@
-# YouTube_Max_Quality_Switcher
+# Auto_Max_Quality_Pro
 
-A browser extension designed to automatically switch YouTube videos to the highest available quality.
+A browser extension designed to automatically switch YouTube & Other videos to the highest available quality.
 
 ![Screenshot 1](./extras/Screenshot_1.jpg)
 

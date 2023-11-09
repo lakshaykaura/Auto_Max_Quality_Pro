@@ -66,11 +66,12 @@ $(document).ready(function () {
 
                 setTimeout(() => {
                     window.close();
-                }, 3000);
+                }, 2500);
             });
         });
     });
 });
+
 document.addEventListener('DOMContentLoaded', () => {
     const backgroundImage = document.createElement('div');
     backgroundImage.classList.add('background-image');
