@@ -2,7 +2,7 @@
 
 A browser extension designed to automatically switch YouTube & Other videos to the highest available quality.
 
-![Screenshot 1](./extras/Screenshot_1.jpg)
+![Screenshot 1](./extras/Repo_Screenshot_1.jpg)
 
 ## Installation
 
