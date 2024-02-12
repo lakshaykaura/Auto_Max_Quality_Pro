@@ -6,7 +6,7 @@ A browser extension designed to automatically switch YouTube & Other videos to t
 
 ## Installation
 
-[![Install from Chrome Web Store](https://storage.googleapis.com/web-dev-uploads/image/WlD8wC6g8khYWPJUsQceQkhXSlv1/UV4C4ybeBTsZt43U4xis.png)](https://chrome.google.com/webstore/detail/youtube-max-quality-switc/habbodnofieogkocjdbdfabafpjgjbpb)
+[![Install from Chrome Web Store](https://storage.googleapis.com/web-dev-uploads/image/WlD8wC6g8khYWPJUsQceQkhXSlv1/UV4C4ybeBTsZt43U4xis.png)](https://chromewebstore.google.com/detail/auto-max-quality-pro/habbodnofieogkocjdbdfabafpjgjbpb)
 
 Click the badge above to install the extension from the Chrome Web Store.
 
