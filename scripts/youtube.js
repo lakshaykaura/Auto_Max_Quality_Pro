@@ -123,9 +123,16 @@ window.checkAndAdjustYouTubeVideoQuality = function (interval) {
             console.log(`Auto Max Quality Pro Extension: Clicked settings button for: ${getYouTubeVideoTitle()}`);
             shouldAdjustQuality = true;
             clearTimeout(timer);
-            timer = setTimeout(adjustVideoQuality, interval);
         });
     }
+
+    // Listen for storage changes to update quality immediately
+    chrome.storage.onChanged.addListener(function (changes, namespace) {
+        if (namespace === 'sync' && (changes.maxQuality || changes.checkInterval)) {
+            shouldAdjustQuality = true;
+            adjustVideoQuality();
+        }
+    });
 };
 
 // Function to get the title of the YouTube video

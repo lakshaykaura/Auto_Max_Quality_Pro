@@ -29,6 +29,26 @@ $(document).ready(function () {
         $('#max-quality').val(maxQuality);
     });
 
+    // Mouse hover tracking
+    let isMouseHovering = false;
+    let shouldCloseOnLeave = false;
+
+    $(document).on('mouseenter', function () {
+        isMouseHovering = true;
+    }).on('mouseleave', function () {
+        isMouseHovering = false;
+        if (shouldCloseOnLeave) {
+            closeExtensionWindow();
+        }
+    });
+
+    function closeExtensionWindow() {
+        $('body').addClass('closing-animation');
+        setTimeout(() => {
+            window.close();
+        }, 400); // 0.4s matching the animation
+    }
+
     // Save the interval and selected max quality
     $('#save').on('click', function () {
         let interval = parseInt($('#interval').val(), 10) * 1000;
@@ -43,14 +63,19 @@ $(document).ready(function () {
 
                 $(this).addClass('active-button');
 
-                $('#interval').focus();
-
                 setTimeout(() => {
                     $(this).removeClass('active-button');
                 }, 100);
 
+                // Wait 2.5s, then handle closure
                 setTimeout(() => {
-                    window.close();
+                    messageDiv.fadeOut('fast');
+
+                    if (!isMouseHovering) {
+                        closeExtensionWindow();
+                    } else {
+                        shouldCloseOnLeave = true;
+                    }
                 }, 2500);
             });
         });
