@@ -1,6 +1,7 @@
 $(document).ready(function () {
     //Donate Btn Logic
     $('#donateBtn').on('click', function () {
+        sendEvent('donation_click', { source: 'popup' });
         window.open('https://www.paypal.com/paypalme/lakshaykaura/2USD', '_blank');
     });
 
@@ -33,6 +34,8 @@ $(document).ready(function () {
         let interval = parseInt($('#interval').val(), 10) * 1000;
         chrome.storage.sync.set({ 'checkInterval': interval }, function () {
             let maxQuality = $('#max-quality').val();
+            sendEvent('setting_change', { setting: 'maxQuality', value: maxQuality });
+            sendEvent('setting_change', { setting: 'checkInterval', value: interval });
             chrome.storage.sync.set({ 'maxQuality': maxQuality }, function () {
                 let messageDiv = $('#message');
                 messageDiv.show();

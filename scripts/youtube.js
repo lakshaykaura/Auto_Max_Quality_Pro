@@ -62,6 +62,7 @@ window.checkAndAdjustYouTubeVideoQuality = function (interval) {
                                 }
 
                                 selectedQuality.click();
+                                sendEvent('quality_change', { quality: selectedQuality.text().trim() });
                                 trackMostCommonQuality(selectedQuality.text().trim());
                                 incrementQualityChangeCount();
                                 const videoFrame = selectedQuality.parents('div.html5-video-player');

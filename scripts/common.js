@@ -1,18 +1,18 @@
 // Function to increment the quality change count in statistics
 function incrementQualityChangeCount() {
-    chrome.storage.sync.get({qualityChangeCount: 0}, function (result) {
+    chrome.storage.sync.get({ qualityChangeCount: 0 }, function (result) {
         let count = result.qualityChangeCount;
         count++;
-        chrome.storage.sync.set({qualityChangeCount: count});
+        chrome.storage.sync.set({ qualityChangeCount: count });
     });
 }
 
 // Function to track the most common quality in statistics
 function trackMostCommonQuality(quality) {
-    chrome.storage.sync.get({qualityFrequency: {}}, function (result) {
+    chrome.storage.sync.get({ qualityFrequency: {} }, function (result) {
         let frequency = result.qualityFrequency;
         frequency[quality] = (frequency[quality] || 0) + 1;
-        chrome.storage.sync.set({qualityFrequency: frequency});
+        chrome.storage.sync.set({ qualityFrequency: frequency });
     });
 }
 
@@ -49,4 +49,22 @@ function showSuccessMessage(selectedQuality, videoFrame) {
             }, 500);
         }, 1500);
     }, 100);
+}
+
+// Send GA Event helper
+function sendEvent(eventName, params = {}) {
+    // Add default device/browser info that is available in Content Script/Popup but NOT in Service Worker
+    const enhancedParams = {
+        screen_resolution: `${window.screen.width}x${window.screen.height}`,
+        language: navigator.language,
+        page_title: document.title,
+        page_location: window.location.href,
+        ...params
+    };
+
+    chrome.runtime.sendMessage({
+        type: 'GA_EVENT',
+        eventName,
+        params: enhancedParams
+    });
 }
