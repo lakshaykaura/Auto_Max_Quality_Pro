@@ -24,15 +24,36 @@ window.checkAndAdjustYouTubeVideoQuality = function (interval) {
                                 // Find the index of the desired quality in the priority list
                                 const maxQualityIndex = qualityPriority.indexOf(maxQuality);
 
+
                                 // Select the next best available quality
-                                for (let i = maxQualityIndex; i < qualityPriority.length; i++) {
+                                let startIndex = maxQualityIndex === -1 ? 0 : maxQualityIndex;
+                                for (let i = startIndex; i < qualityPriority.length; i++) {
+                                    let bestMatch = null;
+                                    let candidateQualities = [];
+
                                     availableQualities.each(function () {
                                         if ($(this).text().includes(qualityPriority[i])) {
-                                            selectedQuality = $(this);
-                                            return false;
+                                            candidateQualities.push($(this));
                                         }
                                     });
-                                    if (selectedQuality) break;
+
+                                    if (candidateQualities.length > 0) {
+
+
+                                        // If multiple matches for the same resolution, prefer "Premium" or "Enhanced"
+                                        bestMatch = candidateQualities.find(q => {
+                                            const text = q.text().toLowerCase();
+                                            return text.includes('premium') || text.includes('enhanced') || text.includes('high bitrate');
+                                        });
+
+                                        // Fallback to the first match if no premium version found
+                                        if (!bestMatch) {
+                                            bestMatch = candidateQualities[0];
+                                        }
+
+                                        selectedQuality = bestMatch;
+                                        break;
+                                    }
                                 }
 
                                 // If no suitable quality was found, choose the highest available
@@ -45,11 +66,14 @@ window.checkAndAdjustYouTubeVideoQuality = function (interval) {
                                 incrementQualityChangeCount();
                                 const videoFrame = selectedQuality.parents('div.html5-video-player');
                                 showSuccessMessage(selectedQuality.text().trim(), videoFrame);
-                                console.log(`Auto Max Quality Pro Extension: Changed quality to ${selectedQuality.text().trim()} for: ${getYouTubeVideoTitle()}`);
                             }
 
-                            // Close settings panel
-                            settingsButton.click();
+                            // Close settings panel if it's still open
+                            setTimeout(() => {
+                                if (settingsButton.attr('aria-expanded') === 'true') {
+                                    settingsButton.click();
+                                }
+                            }, 500); // Wait for the selection action to complete
 
                             // Reset the flag
                             shouldAdjustQuality = false;
@@ -63,6 +87,33 @@ window.checkAndAdjustYouTubeVideoQuality = function (interval) {
     // Adjust the quality immediately when the page loads
     shouldAdjustQuality = true;
     adjustVideoQuality();
+
+    // CRM: Listen for YouTube's navigation event (SPA navigation)
+    document.addEventListener('yt-navigate-finish', function () {
+        shouldAdjustQuality = true;
+        adjustVideoQuality();
+    });
+
+    // CRM: Also observe for video element appearing or source changing
+    const observer = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+            if (mutation.type === 'childList') {
+                const video = document.querySelector('video.html5-main-video');
+                if (video && !video.dataset.amqpObserved) {
+                    video.dataset.amqpObserved = 'true';
+                    video.addEventListener('loadeddata', function () {
+                        shouldAdjustQuality = true;
+                        adjustVideoQuality();
+                    });
+                    shouldAdjustQuality = true;
+                    adjustVideoQuality();
+                }
+            }
+        }
+    });
+
+    // Start observing the body for changes (to catch player loading)
+    observer.observe(document.body, { childList: true, subtree: true });
 
     // Observe interactions with the settings button to re-adjust the quality as per the interval
     const settingsButton = $('button.ytp-settings-button');

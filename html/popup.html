@@ -14,66 +14,69 @@
 </head>
 
 <body class="p-3">
-<div class="text-right donate-button-container">
-    <button id="donateBtn" class="btn btn-info btn-sm btn-xs">
-        <img src="../media/donate-heart-light.png" alt="Donate" width="15px"
-             class="donate-btn-class show-in-dark-theme"/>
-        <img src="../media/donate-heart-dark.png" alt="Donate" width="15px"
-             class="donate-btn-class show-in-light-theme"/>
-        <img src="../media/back-button.png" alt="Back" width="15px" class="back-btn-img"/>
-        <span class="button-text">Donate</span>
-    </button>
-</div>
-<div id="donate-qr">
-    <img src="../media/qr_code.jpg" alt="Paytm QR Code" width="200px">
-</div>
-<div class="hide-on-donate-click">
-    <div class="form-group d-flex justify-content-between align-items-center quality-selection">
-        <label for="max-quality" class="mb-0">Preferred Video Quality:</label>
-        <select id="max-quality" name="max-quality" class="quality-dropdown form-control" style="width: 60%;">
-            <option value="highest">Highest Available</option>
-            <option value="4320p">4320p (8K)</option>
-            <option value="2160p">2160p (4K)</option>
-            <option value="1440p">1440p (QHD)</option>
-            <option value="1080p" selected>1080p (Full HD)</option>
-            <option value="720p">720p (HD)</option>
-            <option value="480p">480p</option>
-            <option value="360p">360p</option>
-            <option value="240p">240p</option>
-        </select>
+    <div class="text-right donate-button-container">
+        <button id="donateBtn" class="btn btn-info btn-sm btn-xs">
+            <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                x="0px" y="0px" viewBox="0 0 544.582 544.582" style="enable-background:new 0 0 544.582 544.582;"
+                xml:space="preserve" width="14px" height="14px" fill="currentColor">
+                <g>
+                    <path d="M448.069,57.839c-72.675-23.562-150.781,15.759-175.721,87.898C247.4,73.591,169.303,34.271,96.628,57.839
+                    C23.111,81.784-16.975,160.88,6.894,234.708c22.95,70.38,235.773,258.876,263.006,258.876c27.234,0,244.801-188.267,267.751-258.876
+                    C561.595,160.88,521.509,81.784,448.069,57.839z" />
+                </g>
+            </svg>
+            <span class="button-text">Donate</span>
+        </button>
     </div>
-    <p class="disclaimer">
-        The extension will prioritize your selected quality if available. Otherwise, it will select the nearest
-        higher quality. In cases where higher qualities are not available, it will choose the highest available
-        quality.
-    </p>
-    <div class="form-group d-flex justify-content-between align-items-center">
-        <label for="interval" class="mb-0">Wait interval (in seconds):</label>
-        <input type="number" id="interval" min="1" class="form-control" style="width: 60%;">
+    <div>
+        <div class="form-group d-flex justify-content-between align-items-center quality-selection">
+            <label for="max-quality" class="mb-0">Preferred Video Quality:</label>
+            <select id="max-quality" name="max-quality" class="quality-dropdown form-control" style="width: 60%;">
+                <option value="highest">Highest Available</option>
+                <option value="4320p">4320p (8K)</option>
+                <option value="2160p">2160p (4K)</option>
+                <option value="1440p">1440p (QHD)</option>
+                <option value="1080p" selected>1080p (Full HD)</option>
+                <option value="720p">720p (HD)</option>
+                <option value="480p">480p</option>
+                <option value="360p">360p</option>
+                <option value="240p">240p</option>
+            </select>
+        </div>
+        <p class="disclaimer">
+            The extension will prioritize your selected quality if available. Otherwise, it will select the nearest
+            higher quality. In cases where higher qualities are not available, it will choose the highest available
+            quality.
+        </p>
+        <div class="form-group d-flex justify-content-between align-items-center">
+            <label for="interval" class="mb-0">Wait interval (in seconds):</label>
+            <input type="number" id="interval" min="1" class="form-control" style="width: 60%;">
+        </div>
+        <p class="disclaimer">This extension will continuously monitor video links and as soon as a new video is opened,
+            it
+            will select your preferred quality setting or the highest available quality if your preferred option is not
+            available. If the user manually changes the video quality, the extension will respect that choice for the
+            duration set above. After the configured time elapses, the extension will step in to re-select your
+            preferred
+            quality for the same video.</p>
+        <div class="text-center">
+            <button id="save" class="btn btn-success">Save</button>
+        </div>
+        <div id="message" class="alert alert-success mt-3" role="alert">
+            Settings saved!
+        </div>
     </div>
-    <p class="disclaimer">This extension will continuously monitor video links and as soon as a new video is opened, it
-        will select your preferred quality setting or the highest available quality if your preferred option is not
-        available. If the user manually changes the video quality, the extension will respect that choice for the
-        duration set above. After the configured time elapses, the extension will step in to re-select your preferred
-        quality for the same video.</p>
-    <div class="text-center">
-        <button id="save" class="btn btn-success">Save</button>
-    </div>
-    <div id="message" class="alert alert-success mt-3" role="alert">
-        Settings saved!
-    </div>
-</div>
-<footer class="statistics-footer">
-    <span id="qualityChangesCount">Automatically switched video quality:
-        <span class="nowrap font-weight-bold"> for You</span>
-    </span>
-    <br>
-    <span id="mostCommonQuality">Most frequent switched quality is:
-        <span class="nowrap font-weight-bold"></span>.
-    </span>
-</footer>
-<script src="../scripts/libs/jquery-3.6.0.min.js"></script>
-<script src="../scripts/popup.js"></script>
+    <footer class="statistics-footer">
+        <span id="qualityChangesCount">Automatically switched video quality:
+            <span class="nowrap font-weight-bold"> for You</span>
+        </span>
+        <br>
+        <span id="mostCommonQuality">Most frequent switched quality is:
+            <span class="nowrap font-weight-bold"></span>.
+        </span>
+    </footer>
+    <script src="../scripts/libs/jquery-3.6.0.min.js"></script>
+    <script src="../scripts/popup.js"></script>
 </body>
 
 </html>

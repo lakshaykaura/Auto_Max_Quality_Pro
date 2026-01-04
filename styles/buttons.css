@@ -1,4 +1,7 @@
-.btn-xs, button#donateBtn, .active-button, .back-button {
+.btn-xs,
+button#donateBtn,
+.active-button,
+.back-button {
     padding: 0.25rem 0.5rem;
     font-size: 0.7875rem;
     line-height: 1.5;
@@ -32,7 +35,18 @@ button#donateBtn.back-button {
     border-color: var(--secondary-color);
 }
 
-button#donateBtn.active-button, button#save.active-button {
+
+button#donateBtn.active-button,
+button#save.active-button {
     background-color: var(--primary-color);
     border-color: var(--primary-color);
+}
+
+button#donateBtn:hover svg {
+    animation: pulse-heart 1s infinite;
+}
+
+button#donateBtn svg {
+    margin-right: 5px;
+    vertical-align: middle;
 }

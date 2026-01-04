@@ -1,40 +1,7 @@
 $(document).ready(function () {
     //Donate Btn Logic
     $('#donateBtn').on('click', function () {
-        let qrCode = $('#donate-qr');
-        qrCode.toggle();
-
-        let otherOptionsDiv = $('div.hide-on-donate-click');
-        otherOptionsDiv.toggle();
-
-        let backButtonImage = $('.back-btn-img');
-        backButtonImage.toggle();
-
-        $(document).find('.donate-btn-class').each(function () {
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                if ($(this).hasClass('show-in-dark-theme')) {
-                    $(this).toggle();
-                }
-            } else {
-                if ($(this).hasClass('show-in-light-theme')) {
-                    $(this).toggle();
-                }
-            }
-        });
-
-        $(this).toggleClass('active-button');
-        if ($(this).hasClass('back-button')) {
-            $(this).removeClass('back-button');
-            $('.button-text', this).text("Donate");
-            $('#interval').focus();
-        } else {
-            $(this).addClass('back-button');
-            $('.button-text', this).text("Back");
-        }
-
-        setTimeout(() => {
-            $(this).removeClass('active-button');
-        }, 100);
+        window.open('https://www.paypal.com/paypalme/lakshaykaura/2USD', '_blank');
     });
 
     // Fetch and display statistics
@@ -64,12 +31,12 @@ $(document).ready(function () {
     // Save the interval and selected max quality
     $('#save').on('click', function () {
         let interval = parseInt($('#interval').val(), 10) * 1000;
-        chrome.storage.sync.set({'checkInterval': interval}, function () {
+        chrome.storage.sync.set({ 'checkInterval': interval }, function () {
             let maxQuality = $('#max-quality').val();
-            chrome.storage.sync.set({'maxQuality': maxQuality}, function () {
+            chrome.storage.sync.set({ 'maxQuality': maxQuality }, function () {
                 let messageDiv = $('#message');
                 messageDiv.show();
-                messageDiv[0].scrollIntoView({behavior: "smooth"});
+                messageDiv[0].scrollIntoView({ behavior: "smooth" });
 
                 $(this).addClass('active-button');
 
