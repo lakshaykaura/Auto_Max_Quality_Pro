@@ -20,13 +20,9 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.ref }}
 
-      - name: Install GitHub CLI and Login
+      - name: Authenticate GitHub CLI
         run: |
-          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C99B11DEB97541F0 23F3D4EA75716059
-          sudo apt-add-repository https://cli.github.com/packages
-          sudo apt update
-          sudo apt install -y gh
-          gh auth login --with-token <<< "${{ secrets.github_token }}"
+           echo "${{ secrets.github_token }}" | gh auth login --with-token
 
       - name: Fetch target base branch
         run: |
