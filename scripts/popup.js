@@ -1,40 +1,30 @@
 $(document).ready(function () {
-    //Donate Btn Logic
-    $('#donateBtn').on('click', function () {
-        let qrCode = $('#donate-qr');
-        qrCode.toggle();
+    // Donate Interaction
+    $('.donate-wrapper').on('click', function (e) {
+        e.stopPropagation(); // Stop from closing if clicked inside
+        $(this).toggleClass('expanded');
+    });
 
-        let otherOptionsDiv = $('div.hide-on-donate-click');
-        otherOptionsDiv.toggle();
+    // Handle clicks on specific tier buttons
+    $('.donate-option-btn').on('click', function (e) {
+        e.stopPropagation(); // Prevent toggling the wrapper
+        const amount = $(this).data('amount');
+        sendEvent('donation_click', { source: 'popup', amount: amount });
+        window.open(`https://www.paypal.com/paypalme/lakshaykaura/${amount}`, '_blank');
+        // Close menu after selection (optional)
+        $('.donate-wrapper').removeClass('expanded');
+    });
 
-        let backButtonImage = $('.back-btn-img');
-        backButtonImage.toggle();
+    // Close donate menu when clicking elsewhere
+    $(document).on('click', function () {
+        $('.donate-wrapper').removeClass('expanded');
+    });
 
-        $(document).find('.donate-btn-class').each(function () {
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                if ($(this).hasClass('show-in-dark-theme')) {
-                    $(this).toggle();
-                }
-            } else {
-                if ($(this).hasClass('show-in-light-theme')) {
-                    $(this).toggle();
-                }
-            }
-        });
-
-        $(this).toggleClass('active-button');
-        if ($(this).hasClass('back-button')) {
-            $(this).removeClass('back-button');
-            $('.button-text', this).text("Donate");
-            $('#interval').focus();
-        } else {
-            $(this).addClass('back-button');
-            $('.button-text', this).text("Back");
-        }
-
-        setTimeout(() => {
-            $(this).removeClass('active-button');
-        }, 100);
+    // Empty handler for main btn to prevent default if needed, 
+    // but the wrapper handler covers it.
+    $('#donateBtn').on('click', function (e) {
+        e.preventDefault();
+        // Wrapper handles the toggle
     });
 
     // Fetch and display statistics
@@ -61,26 +51,53 @@ $(document).ready(function () {
         $('#max-quality').val(maxQuality);
     });
 
+    // Mouse hover tracking
+    let isMouseHovering = false;
+    let shouldCloseOnLeave = false;
+
+    $(document).on('mouseenter', function () {
+        isMouseHovering = true;
+    }).on('mouseleave', function () {
+        isMouseHovering = false;
+        if (shouldCloseOnLeave) {
+            closeExtensionWindow();
+        }
+    });
+
+    function closeExtensionWindow() {
+        $('body').addClass('closing-animation');
+        setTimeout(() => {
+            window.close();
+        }, 400); // 0.4s matching the animation
+    }
+
     // Save the interval and selected max quality
     $('#save').on('click', function () {
         let interval = parseInt($('#interval').val(), 10) * 1000;
-        chrome.storage.sync.set({'checkInterval': interval}, function () {
+        chrome.storage.sync.set({ 'checkInterval': interval }, function () {
             let maxQuality = $('#max-quality').val();
-            chrome.storage.sync.set({'maxQuality': maxQuality}, function () {
+            sendEvent('setting_change', { setting: 'maxQuality', value: maxQuality });
+            sendEvent('setting_change', { setting: 'checkInterval', value: interval });
+            chrome.storage.sync.set({ 'maxQuality': maxQuality }, function () {
                 let messageDiv = $('#message');
                 messageDiv.show();
-                messageDiv[0].scrollIntoView({behavior: "smooth"});
+                messageDiv[0].scrollIntoView({ behavior: "smooth" });
 
                 $(this).addClass('active-button');
-
-                $('#interval').focus();
 
                 setTimeout(() => {
                     $(this).removeClass('active-button');
                 }, 100);
 
+                // Wait 2.5s, then handle closure
                 setTimeout(() => {
-                    window.close();
+                    messageDiv.fadeOut('fast');
+
+                    if (!isMouseHovering) {
+                        closeExtensionWindow();
+                    } else {
+                        shouldCloseOnLeave = true;
+                    }
                 }, 2500);
             });
         });

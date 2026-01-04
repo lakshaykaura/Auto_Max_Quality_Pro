@@ -1,8 +1,15 @@
-# Auto_Max_Quality_Pro
+# Auto Max Quality Pro
 
-A browser extension designed to automatically switch YouTube & Other videos to the highest available quality.
+A browser extension designed to automatically switch YouTube & Other videos to the highest available quality. Now smarter than ever!
 
 ![Screenshot 1](./extras/Repo_Screenshot_1.jpg)
+
+## Key Features
+
+- **Auto 4K/8K**: Automatically selects the highest available resolution (up to 8K).
+- **Smart Bitrate Selection**: Prioritizes "Premium" or "Enhanced" bitrate options (e.g., 1080p Premium) over standard qualities when available.
+- **Interactive Donation UI**: A fun, tiered donation system integrated directly into the extension (Coffee ☕, Burger 🍔, Dining 🍴).
+- **Zero Configuration**: Works out of the box, but fully customizable.
 
 ## Installation
 
