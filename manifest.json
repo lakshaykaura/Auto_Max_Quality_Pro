@@ -5,9 +5,15 @@
   "description": "Automatically switches YouTube & Other videos to the highest/selected available quality.",
   "permissions": [
     "storage",
-    "activeTab",
+    "activeTab"
+  ],
+  "host_permissions": [
     "<all_urls>"
   ],
+  "background": {
+    "service_worker": "scripts/background.js"
+  },
+  "offline_enabled": true,
   "content_scripts": [
     {
       "matches": [

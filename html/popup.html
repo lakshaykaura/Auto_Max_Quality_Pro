@@ -14,66 +14,85 @@
 </head>
 
 <body class="p-3">
-<div class="text-right donate-button-container">
-    <button id="donateBtn" class="btn btn-info btn-sm btn-xs">
-        <img src="../media/donate-heart-light.png" alt="Donate" width="15px"
-             class="donate-btn-class show-in-dark-theme"/>
-        <img src="../media/donate-heart-dark.png" alt="Donate" width="15px"
-             class="donate-btn-class show-in-light-theme"/>
-        <img src="../media/back-button.png" alt="Back" width="15px" class="back-btn-img"/>
-        <span class="button-text">Donate</span>
-    </button>
-</div>
-<div id="donate-qr">
-    <img src="../media/qr_code.jpg" alt="Paytm QR Code" width="200px">
-</div>
-<div class="hide-on-donate-click">
-    <div class="form-group d-flex justify-content-between align-items-center quality-selection">
-        <label for="max-quality" class="mb-0">Preferred Video Quality:</label>
-        <select id="max-quality" name="max-quality" class="quality-dropdown form-control" style="width: 60%;">
-            <option value="highest">Highest Available</option>
-            <option value="4320p">4320p (8K)</option>
-            <option value="2160p">2160p (4K)</option>
-            <option value="1440p">1440p (QHD)</option>
-            <option value="1080p" selected>1080p (Full HD)</option>
-            <option value="720p">720p (HD)</option>
-            <option value="480p">480p</option>
-            <option value="360p">360p</option>
-            <option value="240p">240p</option>
-        </select>
+    <div class="text-right donate-button-container">
+        <div class="donate-wrapper">
+            <button id="donateBtn" class="btn btn-info btn-sm btn-xs donate-trigger-btn">
+                <span class="button-text">Donate</span>
+            </button>
+            <div class="donate-options">
+                <button class="donate-option-btn tier-coffee" data-amount="2USD" title="Coffee ($2)">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                        <path
+                            d="M18.5 3H6c-1.1 0-2 .9-2 2v5.71c0 3.83 2.95 7.18 6.78 7.29 4.07.12 7.22-3.16 7.22-7.23V3h.5c1.93 0 3.5 1.57 3.5 3.5S20.43 10 18.5 10H18v2h.5C21.54 12 24 9.54 24 6.5S21.54 3 18.5 3zM16 8H6V5h10v3zM2 19h18v2H2z" />
+                    </svg>
+                    <span>$2</span>
+                </button>
+                <button class="donate-option-btn tier-snack" data-amount="5USD" title="Burger ($5)">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                        <path
+                            d="M19.78 12.55c-1.2-3.8-4.32-6.55-7.78-6.55s-6.57 2.76-7.78 6.55H3V14h18v-1.45h-1.22zM6.55 17h10.9c.77 0 1.45.62 1.54 1.39l.56 4.61H4.45l.56-4.61C5.1 17.62 5.78 17 6.55 17z" />
+                    </svg>
+                    <span>$5</span>
+                </button>
+                <button class="donate-option-btn tier-lunch" data-amount="10USD" title="Dining ($10)">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                        <path
+                            d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z" />
+                    </svg>
+                    <span>$10</span>
+                </button>
+            </div>
+        </div>
     </div>
-    <p class="disclaimer">
-        The extension will prioritize your selected quality if available. Otherwise, it will select the nearest
-        higher quality. In cases where higher qualities are not available, it will choose the highest available
-        quality.
-    </p>
-    <div class="form-group d-flex justify-content-between align-items-center">
-        <label for="interval" class="mb-0">Wait interval (in seconds):</label>
-        <input type="number" id="interval" min="1" class="form-control" style="width: 60%;">
+    <div>
+        <div class="form-group d-flex justify-content-between align-items-center quality-selection">
+            <label for="max-quality" class="mb-0">Preferred Video Quality:</label>
+            <select id="max-quality" name="max-quality" class="quality-dropdown form-control" style="width: 60%;">
+                <option value="highest">Highest Available</option>
+                <option value="4320p">4320p (8K)</option>
+                <option value="2160p">2160p (4K)</option>
+                <option value="1440p">1440p (QHD)</option>
+                <option value="1080p" selected>1080p (Full HD)</option>
+                <option value="720p">720p (HD)</option>
+                <option value="480p">480p</option>
+                <option value="360p">360p</option>
+                <option value="240p">240p</option>
+            </select>
+        </div>
+        <p class="disclaimer">
+            The extension will prioritize your selected quality if available. Otherwise, it will select the nearest
+            higher quality. In cases where higher qualities are not available, it will choose the highest available
+            quality.
+        </p>
+        <div class="form-group d-flex justify-content-between align-items-center">
+            <label for="interval" class="mb-0">Wait interval (in seconds):</label>
+            <input type="number" id="interval" min="1" class="form-control" style="width: 60%;">
+        </div>
+        <p class="disclaimer">This extension will continuously monitor video links and as soon as a new video is opened,
+            it
+            will select your preferred quality setting or the highest available quality if your preferred option is not
+            available. If the user manually changes the video quality, the extension will respect that choice for the
+            duration set above. After the configured time elapses, the extension will step in to re-select your
+            preferred
+            quality for the same video.</p>
+        <div class="text-center">
+            <button id="save" class="btn btn-success">Save</button>
+        </div>
+        <div id="message" class="alert alert-success mt-3" role="alert">
+            Settings saved!
+        </div>
     </div>
-    <p class="disclaimer">This extension will continuously monitor video links and as soon as a new video is opened, it
-        will select your preferred quality setting or the highest available quality if your preferred option is not
-        available. If the user manually changes the video quality, the extension will respect that choice for the
-        duration set above. After the configured time elapses, the extension will step in to re-select your preferred
-        quality for the same video.</p>
-    <div class="text-center">
-        <button id="save" class="btn btn-success">Save</button>
-    </div>
-    <div id="message" class="alert alert-success mt-3" role="alert">
-        Settings saved!
-    </div>
-</div>
-<footer class="statistics-footer">
-    <span id="qualityChangesCount">Automatically switched video quality:
-        <span class="nowrap font-weight-bold"> for You</span>
-    </span>
-    <br>
-    <span id="mostCommonQuality">Most frequent switched quality is:
-        <span class="nowrap font-weight-bold"></span>.
-    </span>
-</footer>
-<script src="../scripts/libs/jquery-3.6.0.min.js"></script>
-<script src="../scripts/popup.js"></script>
+    <footer class="statistics-footer">
+        <span id="qualityChangesCount">Automatically switched video quality:
+            <span class="nowrap font-weight-bold"> for You</span>
+        </span>
+        <br>
+        <span id="mostCommonQuality">Most frequent switched quality is:
+            <span class="nowrap font-weight-bold"></span>.
+        </span>
+    </footer>
+    <script src="../scripts/libs/jquery-3.6.0.min.js"></script>
+    <script src="../scripts/popup.js"></script>
 </body>
 
 </html>
