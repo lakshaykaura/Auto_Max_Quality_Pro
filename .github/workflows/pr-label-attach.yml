@@ -90,8 +90,8 @@ jobs:
               LABEL="version: patch"
           fi
 
-          # Remove existing version labels
-          gh api repos/:owner/:repo/issues/${{ github.event.pull_request.number }}/labels -X DELETE -f name="version: major" -f name="version: minor" -f name="version: patch"
+          # Remove existing version labels (safely ignore if not present)
+          gh pr edit ${{ github.event.pull_request.number }} --remove-label "version: major" --remove-label "version: minor" --remove-label "version: patch" || true
           
           # Add the calculated label
-          gh api repos/:owner/:repo/issues/${{ github.event.pull_request.number }}/labels -X POST -F labels[]="$LABEL"
+          gh pr edit ${{ github.event.pull_request.number }} --add-label "$LABEL"
