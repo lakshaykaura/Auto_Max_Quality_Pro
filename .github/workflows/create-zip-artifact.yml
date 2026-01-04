@@ -21,18 +21,12 @@ jobs:
           VERSION=$(jq -r .version manifest.json)
           echo "CURRENT_RELEASE_VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Create directory for artifact and copy specific files
-        run: |
-          mkdir Auto_Max_Quality_Pro_v${CURRENT_RELEASE_VERSION}
-          cp manifest.json Auto_Max_Quality_Pro_v${CURRENT_RELEASE_VERSION}
-          cp -r ./scripts ./media ./html ./styles Auto_Max_Quality_Pro_v${CURRENT_RELEASE_VERSION}/
-
       - name: Ensure artifacts directory exists
         run: mkdir -p ./artifacts/
 
       - name: Zip the directory
         run: |
-          zip -r ./artifacts/Auto_Max_Quality_Pro_v${CURRENT_RELEASE_VERSION}.zip Auto_Max_Quality_Pro_v${CURRENT_RELEASE_VERSION}
+          zip -r ./artifacts/Auto_Max_Quality_Pro_v${CURRENT_RELEASE_VERSION}.zip manifest.json scripts media html styles
 
       - name: Archive old artifacts
         run: |

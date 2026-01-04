@@ -47,25 +47,35 @@ jobs:
         run: |
           node ./scripts/generate-release-notes.js
 
-      - name: Create GitHub Release (Fallback Mode)
-        if: env.DRAFT_NOT_FOUND == '1'
-        uses: actions/create-release@v1
-        id: create_release
-        with:
-          tag_name: v${{ env.CURRENT_RELEASE_VERSION }}
-          release_name: Release v${{ env.CURRENT_RELEASE_VERSION }}
-          body_path: ./RELEASE_NOTES.md
-          draft: false
-          prerelease: false
+      - name: Create or Update Release
         env:
-          GITHUB_TOKEN: ${{ secrets.github_token }}
+          GH_TOKEN: ${{ secrets.github_token }}
+        run: |
+          VERSION="${{ env.CURRENT_RELEASE_VERSION }}"
+          # Ensure version has v prefix for tag usage, stripping if double
+          CLEAN_VERSION="${VERSION#v}"
+          TAG="v$CLEAN_VERSION"
+          
+          ASSET="./artifacts/Auto_Max_Quality_Pro_v$CLEAN_VERSION.zip"
+          NOTES="./RELEASE_NOTES.md"
+          
+          echo "Processing Release: $TAG"
+          echo "Asset Path: $ASSET"
+          
+          if [ ! -f "$ASSET" ]; then
+            echo "Error: Asset not found at $ASSET"
+            # Try finding without v prefix in filename if mismatch
+            ASSET="./artifacts/Auto_Max_Quality_Pro_$CLEAN_VERSION.zip"
+            if [ ! -f "$ASSET" ]; then
+               echo "Critical: Could not find asset even at $ASSET"
+               exit 1
+            fi
+          fi
 
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url || env.UPLOAD_URL}}
-          asset_path: ./artifacts/Auto_Max_Quality_Pro_v${{ env.CURRENT_RELEASE_VERSION }}.zip
-          asset_name: Auto_Max_Quality_Pro_v${{ env.CURRENT_RELEASE_VERSION }}.zip
-          asset_content_type: application/zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.github_token }}
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG exists. Uploading asset..."
+            gh release upload "$TAG" "$ASSET" --clobber
+          else
+            echo "Creating release $TAG..."
+            gh release create "$TAG" "$ASSET" --title "Release $TAG" --notes-file "$NOTES" --draft=false --prerelease=false
+          fi
