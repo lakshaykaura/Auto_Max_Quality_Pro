@@ -36,17 +36,159 @@ button#donateBtn.back-button {
 }
 
 
-button#donateBtn.active-button,
-button#save.active-button {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
+/* Interactive Donate Button */
+.donate-button-container {
+    margin-bottom: 20px;
+    height: 38px;
 }
 
-button#donateBtn:hover svg {
+.donate-wrapper {
+    position: relative;
+    display: inline-block;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Base button style */
+.donate-trigger-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    background-color: #fce4ec;
+    /* Light pink */
+    color: #e91e63;
+    border: 1px solid #f8bbd0;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    overflow: hidden;
+    white-space: nowrap;
+    z-index: 10;
+    position: relative;
+}
+
+/* Expanded State */
+.donate-wrapper.expanded .donate-trigger-btn {
+    width: 290px;
+    background-color: #fff;
+    padding-left: 10px;
+    justify-content: flex-start;
+    border-color: #e91e63;
+    box-shadow: 0 4px 12px rgba(233, 30, 99, 0.15);
+}
+
+.donate-wrapper.expanded .donate-trigger-btn .button-text {
+    opacity: 0;
+    width: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+/* Donate Options Container */
+.donate-options {
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 6px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease 0.1s;
+    z-index: 20;
+}
+
+.donate-wrapper.expanded .donate-options {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Option Buttons */
+.donate-option-btn {
+    border-radius: 15px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+    opacity: 0;
+    /* Start hidden for animation */
+    transform: translateX(10px);
+}
+
+.donate-wrapper.expanded .donate-option-btn {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Stagger animations */
+.donate-wrapper.expanded .donate-option-btn:nth-child(1) {
+    transition-delay: 0.1s;
+}
+
+.donate-wrapper.expanded .donate-option-btn:nth-child(2) {
+    transition-delay: 0.2s;
+}
+
+.donate-wrapper.expanded .donate-option-btn:nth-child(3) {
+    transition-delay: 0.3s;
+}
+
+/* Tier Specific Styles */
+.tier-coffee {
+    background: #efebe9;
+    color: #5d4037;
+}
+
+.tier-coffee:hover {
+    background: #5d4037;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(93, 64, 55, 0.3);
+}
+
+.tier-snack {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.tier-snack:hover {
+    background: #f57c00;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(245, 124, 0, 0.3);
+}
+
+.tier-lunch {
+    background: #ffebee;
+    color: #d32f2f;
+}
+
+.tier-lunch:hover {
+    background: #d32f2f;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(211, 47, 47, 0.3);
+}
+
+/* Heart Pulse Animation */
+.donate-wrapper.expanded button#donateBtn svg {
     animation: pulse-heart 1s infinite;
 }
 
-button#donateBtn svg {
-    margin-right: 5px;
-    vertical-align: middle;
+/* Heart Icon Styling - Enhanced Visibility */
+.donate-trigger-btn svg {
+    fill: #d32f2f;
+    /* Dark Red initially */
+    filter: drop-shadow(0px 1px 0px rgba(255, 255, 255, 0.4));
+    /* Subtle highlight */
+    transition: transform 0.3s ease, fill 0.3s ease;
+}
+
+/* When expanded or hovered, make consistent */
+.donate-wrapper:hover .donate-trigger-btn svg,
+.donate-wrapper.expanded .donate-trigger-btn svg {
+    fill: #d32f2f;
 }

@@ -1,8 +1,30 @@
 $(document).ready(function () {
-    //Donate Btn Logic
-    $('#donateBtn').on('click', function () {
-        sendEvent('donation_click', { source: 'popup' });
-        window.open('https://www.paypal.com/paypalme/lakshaykaura/2USD', '_blank');
+    // Donate Interaction
+    $('.donate-wrapper').on('click', function (e) {
+        e.stopPropagation(); // Stop from closing if clicked inside
+        $(this).toggleClass('expanded');
+    });
+
+    // Handle clicks on specific tier buttons
+    $('.donate-option-btn').on('click', function (e) {
+        e.stopPropagation(); // Prevent toggling the wrapper
+        const amount = $(this).data('amount');
+        sendEvent('donation_click', { source: 'popup', amount: amount });
+        window.open(`https://www.paypal.com/paypalme/lakshaykaura/${amount}`, '_blank');
+        // Close menu after selection (optional)
+        $('.donate-wrapper').removeClass('expanded');
+    });
+
+    // Close donate menu when clicking elsewhere
+    $(document).on('click', function () {
+        $('.donate-wrapper').removeClass('expanded');
+    });
+
+    // Empty handler for main btn to prevent default if needed, 
+    // but the wrapper handler covers it.
+    $('#donateBtn').on('click', function (e) {
+        e.preventDefault();
+        // Wrapper handles the toggle
     });
 
     // Fetch and display statistics

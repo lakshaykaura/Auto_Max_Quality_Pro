@@ -15,18 +15,34 @@
 
 <body class="p-3">
     <div class="text-right donate-button-container">
-        <button id="donateBtn" class="btn btn-info btn-sm btn-xs">
-            <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                x="0px" y="0px" viewBox="0 0 544.582 544.582" style="enable-background:new 0 0 544.582 544.582;"
-                xml:space="preserve" width="14px" height="14px" fill="currentColor">
-                <g>
-                    <path d="M448.069,57.839c-72.675-23.562-150.781,15.759-175.721,87.898C247.4,73.591,169.303,34.271,96.628,57.839
-                    C23.111,81.784-16.975,160.88,6.894,234.708c22.95,70.38,235.773,258.876,263.006,258.876c27.234,0,244.801-188.267,267.751-258.876
-                    C561.595,160.88,521.509,81.784,448.069,57.839z" />
-                </g>
-            </svg>
-            <span class="button-text">Donate</span>
-        </button>
+        <div class="donate-wrapper">
+            <button id="donateBtn" class="btn btn-info btn-sm btn-xs donate-trigger-btn">
+                <span class="button-text">Donate</span>
+            </button>
+            <div class="donate-options">
+                <button class="donate-option-btn tier-coffee" data-amount="2USD" title="Coffee ($2)">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                        <path
+                            d="M18.5 3H6c-1.1 0-2 .9-2 2v5.71c0 3.83 2.95 7.18 6.78 7.29 4.07.12 7.22-3.16 7.22-7.23V3h.5c1.93 0 3.5 1.57 3.5 3.5S20.43 10 18.5 10H18v2h.5C21.54 12 24 9.54 24 6.5S21.54 3 18.5 3zM16 8H6V5h10v3zM2 19h18v2H2z" />
+                    </svg>
+                    <span>$2</span>
+                </button>
+                <button class="donate-option-btn tier-snack" data-amount="5USD" title="Burger ($5)">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                        <path
+                            d="M19.78 12.55c-1.2-3.8-4.32-6.55-7.78-6.55s-6.57 2.76-7.78 6.55H3V14h18v-1.45h-1.22zM6.55 17h10.9c.77 0 1.45.62 1.54 1.39l.56 4.61H4.45l.56-4.61C5.1 17.62 5.78 17 6.55 17z" />
+                    </svg>
+                    <span>$5</span>
+                </button>
+                <button class="donate-option-btn tier-lunch" data-amount="10USD" title="Dining ($10)">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                        <path
+                            d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z" />
+                    </svg>
+                    <span>$10</span>
+                </button>
+            </div>
+        </div>
     </div>
     <div>
         <div class="form-group d-flex justify-content-between align-items-center quality-selection">
