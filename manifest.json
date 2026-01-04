@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Auto Max Quality Pro",
-  "version": "2.2.0",
+  "version": "2.3.1",
   "description": "Automatically switches YouTube & Other videos to the highest/selected available quality.",
   "permissions": [
     "storage",
@@ -20,10 +20,10 @@
         "<all_urls>"
       ],
       "js": [
-        "./scripts/libs/jquery-3.6.0.min.js",
-        "./scripts/common.js",
-        "./scripts/main.js",
-        "./scripts/youtube.js"
+        "scripts/libs/jquery-3.6.0.min.js",
+        "scripts/common.js",
+        "scripts/main.js",
+        "scripts/youtube.js"
       ],
       "all_frames": true
     }
@@ -40,20 +40,20 @@
     }
   ],
   "icons": {
-    "16": "./media/icon16.png",
-    "48": "./media/icon48.png",
-    "128": "./media/icon128.png",
-    "256": "./media/icon256.png",
-    "512": "./media/icon512.png"
+    "16": "media/icon16.png",
+    "48": "media/icon48.png",
+    "128": "media/icon128.png",
+    "256": "media/icon256.png",
+    "512": "media/icon512.png"
   },
   "action": {
     "default_icon": {
-      "16": "./media/icon16.png",
-      "48": "./media/icon48.png",
-      "128": "./media/icon128.png",
-      "256": "./media/icon256.png",
-      "512": "./media/icon512.png"
+      "16": "media/icon16.png",
+      "48": "media/icon48.png",
+      "128": "media/icon128.png",
+      "256": "media/icon256.png",
+      "512": "media/icon512.png"
     },
-    "default_popup": "./html/popup.html"
+    "default_popup": "html/popup.html"
   }
 }
