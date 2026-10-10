@@ -1,8 +1,19 @@
 $(document).ready(function () {
+    // While the donate menu is open, the PayPal QR code takes the place of the settings
+    function setDonateMenuOpen(open) {
+        $('.donate-wrapper').toggleClass('expanded', open);
+        $('#donate-qr').toggle(open);
+        $('#settings').toggle(!open);
+        if (open) {
+            // Do not let an earlier Save close the popup when the mouse leaves it to pick up a phone
+            shouldCloseOnLeave = false;
+        }
+    }
+
     // Donate Interaction
     $('.donate-wrapper').on('click', function (e) {
         e.stopPropagation(); // Stop from closing if clicked inside
-        $(this).toggleClass('expanded');
+        setDonateMenuOpen(!$(this).hasClass('expanded'));
     });
 
     // Handle clicks on specific tier buttons
@@ -12,12 +23,15 @@ $(document).ready(function () {
         sendEvent('donation_click', { source: 'popup', amount: amount });
         window.open(`https://www.paypal.com/paypalme/lakshaykaura/${amount}`, '_blank');
         // Close menu after selection (optional)
-        $('.donate-wrapper').removeClass('expanded');
+        setDonateMenuOpen(false);
     });
 
-    // Close donate menu when clicking elsewhere
+    // Close donate menu when clicking elsewhere; clicks on the QR code panel keep it open
     $(document).on('click', function () {
-        $('.donate-wrapper').removeClass('expanded');
+        setDonateMenuOpen(false);
+    });
+    $('#donate-qr').on('click', function (e) {
+        e.stopPropagation();
     });
 
     // Empty handler for main btn to prevent default if needed, 
@@ -51,6 +65,11 @@ $(document).ready(function () {
         $('#max-quality').val(maxQuality);
     });
 
+    //Fetch and display the enhanced bitrate preference (on unless switched off)
+    chrome.storage.sync.get('preferEnhancedBitrate', function (data) {
+        $('#prefer-enhanced-bitrate').prop('checked', data.preferEnhancedBitrate !== false);
+    });
+
     // Mouse hover tracking
     let isMouseHovering = false;
     let shouldCloseOnLeave = false;
@@ -76,9 +95,11 @@ $(document).ready(function () {
         let interval = parseInt($('#interval').val(), 10) * 1000;
         chrome.storage.sync.set({ 'checkInterval': interval }, function () {
             let maxQuality = $('#max-quality').val();
+            let preferEnhancedBitrate = $('#prefer-enhanced-bitrate').prop('checked');
             sendEvent('setting_change', { setting: 'maxQuality', value: maxQuality });
+            sendEvent('setting_change', { setting: 'preferEnhancedBitrate', value: preferEnhancedBitrate });
             sendEvent('setting_change', { setting: 'checkInterval', value: interval });
-            chrome.storage.sync.set({ 'maxQuality': maxQuality }, function () {
+            chrome.storage.sync.set({ 'maxQuality': maxQuality, 'preferEnhancedBitrate': preferEnhancedBitrate }, function () {
                 let messageDiv = $('#message');
                 messageDiv.show();
                 messageDiv[0].scrollIntoView({ behavior: "smooth" });
@@ -92,6 +113,11 @@ $(document).ready(function () {
                 // Wait 2.5s, then handle closure
                 setTimeout(() => {
                     messageDiv.fadeOut('fast');
+
+                    // The donate menu was opened in the meantime: stay open for the QR code
+                    if ($('.donate-wrapper').hasClass('expanded')) {
+                        return;
+                    }
 
                     if (!isMouseHovering) {
                         closeExtensionWindow();

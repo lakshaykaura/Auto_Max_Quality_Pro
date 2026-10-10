@@ -44,12 +44,17 @@
             </div>
         </div>
     </div>
-    <div>
+    <div id="donate-qr">
+        <img src="../media/paypal_qr.png" alt="PayPal QR code" width="164" height="164">
+        <p class="disclaimer">Scan to donate with PayPal, or pick an amount above.</p>
+    </div>
+    <div id="settings">
         <div class="form-group d-flex justify-content-between align-items-center quality-selection">
             <label for="max-quality" class="mb-0">Preferred Video Quality:</label>
             <select id="max-quality" name="max-quality" class="quality-dropdown form-control" style="width: 60%;">
                 <option value="highest">Highest Available</option>
                 <option value="4320p">4320p (8K)</option>
+                <option value="2880p">2880p (5K)</option>
                 <option value="2160p">2160p (4K)</option>
                 <option value="1440p">1440p (QHD)</option>
                 <option value="1080p" selected>1080p (Full HD)</option>
@@ -57,11 +62,19 @@
                 <option value="480p">480p</option>
                 <option value="360p">360p</option>
                 <option value="240p">240p</option>
+                <option value="144p">144p</option>
             </select>
+        </div>
+        <div class="form-check enhanced-bitrate-selection"
+            title="Selects the Premium &quot;Enhanced bitrate&quot; version of your preferred quality when your YouTube account can play it. Turn off to always use the standard version.">
+            <input type="checkbox" id="prefer-enhanced-bitrate" name="prefer-enhanced-bitrate" class="form-check-input"
+                checked>
+            <label for="prefer-enhanced-bitrate" class="form-check-label">Prefer Enhanced bitrate (YouTube
+                Premium)</label>
         </div>
         <p class="disclaimer">
             The extension will prioritize your selected quality if available. Otherwise, it will select the nearest
-            higher quality. In cases where higher qualities are not available, it will choose the highest available
+            lower quality. In cases where lower qualities are not available, it will choose the highest available
             quality.
         </p>
         <div class="form-group d-flex justify-content-between align-items-center">
