@@ -126,14 +126,19 @@ window.checkAndAdjustYouTubeVideoQuality = function (interval) {
             const preferEnhancedBitrate = data.preferEnhancedBitrate !== false;
             const player = getActiveYouTubePlayer();
             const settingsButton = player.find('button.ytp-settings-button');
-            if (!settingsButton.length || !shouldAdjustQuality) {
+            if (!settingsButton.length) {
                 return;
             }
 
             // One pass at a time: overlapping passes toggle the settings panel shut under each other.
-            // A request that arrives meanwhile (e.g. the next video loaded) is served right after.
+            // A request that arrives meanwhile (e.g. the next video loaded) is served right after. This is checked
+            // before the flag, which the running pass resets while it is still finishing.
             if (isAdjusting) {
                 adjustAgain = true;
+                return;
+            }
+
+            if (!shouldAdjustQuality) {
                 return;
             }
 
