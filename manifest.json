@@ -26,6 +26,17 @@
         "scripts/youtube.js"
       ],
       "all_frames": true
+    },
+    {
+      "matches": [
+        "*://*.youtube.com/*",
+        "*://*.youtube-nocookie.com/*"
+      ],
+      "js": [
+        "scripts/youtube-player-bridge.js"
+      ],
+      "all_frames": true,
+      "world": "MAIN"
     }
   ],
   "content_security_policy": {
