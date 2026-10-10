@@ -1,6 +1,8 @@
 // Channel to youtube-player-bridge.js, which runs in the page's world and can ask the player about itself
 const PLAYER_INFO_REQUEST = 'amqp-player-info-request';
 const PLAYER_INFO_ATTRIBUTE = 'data-amqp-player-info';
+const PLAYBACK_RATE_REQUEST = 'amqp-playback-rate-request';
+const PLAYBACK_RATE_ATTRIBUTE = 'data-amqp-playback-rate';
 
 // The page can hold several players (watch page, miniplayer, hover previews); use the one that is on screen
 function getActiveYouTubePlayer() {
@@ -241,6 +243,83 @@ window.checkAndAdjustYouTubeVideoQuality = function (interval) {
         if (namespace === 'sync' && (changes.maxQuality || changes.preferEnhancedBitrate || changes.checkInterval)) {
             shouldAdjustQuality = true;
             adjustVideoQuality();
+        }
+    });
+};
+
+// Change the speed through the player (via the page-world bridge), so that YouTube's own speed menu stays in step.
+// The bridge takes the request off the player once handled; if it is still there, set the video element directly.
+function setYouTubePlaybackRate(player, video, speed) {
+    player.attr(PLAYBACK_RATE_ATTRIBUTE, speed);
+    document.dispatchEvent(new CustomEvent(PLAYBACK_RATE_REQUEST));
+    if (player.attr(PLAYBACK_RATE_ATTRIBUTE) !== undefined) {
+        player.removeAttr(PLAYBACK_RATE_ATTRIBUTE);
+        video.playbackRate = speed;
+    }
+}
+
+// Check and adjust the playback speed of the YouTube video
+window.checkAndAdjustYouTubeVideoSpeed = function () {
+    let lastSpeedAdjustment = null;
+    let adTimer = null;
+
+    function adjustVideoSpeed() {
+        chrome.storage.sync.get('playbackSpeed', function (data) {
+            // "YouTube default" (or nothing saved yet) leaves the speed to YouTube and the viewer
+            const speed = parseFloat(data.playbackSpeed);
+            const player = getActiveYouTubePlayer();
+            const video = player.find('video.html5-main-video')[0];
+            if (!speed || !video) {
+                return;
+            }
+
+            // Wait for the actual video: a speed set during an ad may not carry over to it
+            if (player.hasClass('ad-showing')) {
+                clearTimeout(adTimer);
+                adTimer = setTimeout(adjustVideoSpeed, 1000);
+                return;
+            }
+
+            // Set the speed once per video, so that a speed the viewer picks afterwards is left alone
+            const playerInfo = getPlayerInfo(player);
+            const speedAdjustment = playerInfo && playerInfo.videoId ? `${playerInfo.videoId}|${speed}` : null;
+            if (speedAdjustment && speedAdjustment === lastSpeedAdjustment) {
+                return;
+            }
+            lastSpeedAdjustment = speedAdjustment;
+
+            if (video.playbackRate !== speed) {
+                setYouTubePlaybackRate(player, video, speed);
+                console.log(`Auto Max Quality Pro: Adjusted speed to ${speed}x`);
+            }
+        });
+    }
+
+    // Initial check
+    adjustVideoSpeed();
+
+    // Listen for navigation
+    document.addEventListener('yt-navigate-finish', adjustVideoSpeed);
+
+    // Observer for new video elements
+    const observer = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+            if (mutation.type === 'childList') {
+                const video = document.querySelector('video.html5-main-video');
+                if (video && !video.dataset.amqpSpeedObserved) {
+                    video.dataset.amqpSpeedObserved = 'true';
+                    video.addEventListener('loadeddata', adjustVideoSpeed);
+                    adjustVideoSpeed();
+                }
+            }
+        }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // Listen for storage changes
+    chrome.storage.onChanged.addListener(function (changes, namespace) {
+        if (namespace === 'sync' && changes.playbackSpeed) {
+            adjustVideoSpeed();
         }
     });
 };

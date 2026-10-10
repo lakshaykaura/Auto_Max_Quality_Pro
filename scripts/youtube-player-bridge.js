@@ -2,10 +2,24 @@
 // reachable from the extension's isolated content scripts. On request it tells youtube.js two things about each player:
 // which video it holds, and which quality menu entries this viewer can actually play. YouTube lists Premium-only
 // entries (e.g. "1080p Premium") for everyone, and clicking one without a membership opens an upsell instead of
-// changing the quality.
+// changing the quality. It also sets the playback speed youtube.js asks for.
 (function () {
     const PLAYER_INFO_REQUEST = 'amqp-player-info-request';
     const PLAYER_INFO_ATTRIBUTE = 'data-amqp-player-info';
+    const PLAYBACK_RATE_REQUEST = 'amqp-playback-rate-request';
+    const PLAYBACK_RATE_ATTRIBUTE = 'data-amqp-playback-rate';
+
+    document.addEventListener(PLAYBACK_RATE_REQUEST, function () {
+        document.querySelectorAll('.html5-video-player[' + PLAYBACK_RATE_ATTRIBUTE + ']').forEach(function (player) {
+            try {
+                player.setPlaybackRate(parseFloat(player.getAttribute(PLAYBACK_RATE_ATTRIBUTE)));
+                // Taking the request off the player tells youtube.js that it was handled
+                player.removeAttribute(PLAYBACK_RATE_ATTRIBUTE);
+            } catch (e) {
+                // Left in place, so youtube.js sets the speed on the video element instead
+            }
+        });
+    });
 
     // Labels the player marks as playable and as not playable. An entry it says nothing about goes on neither list,
     // which youtube.js treats as a standard quality it may select and an enhanced one it may not.

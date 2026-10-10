@@ -70,6 +70,12 @@ $(document).ready(function () {
         $('#prefer-enhanced-bitrate').prop('checked', data.preferEnhancedBitrate !== false);
     });
 
+    //Fetch and display the current playback speed ("YouTube default" until one is chosen)
+    chrome.storage.sync.get('playbackSpeed', function (data) {
+        let speed = data.playbackSpeed || '';
+        $('#playback-speed').val(speed);
+    });
+
     // Mouse hover tracking
     let isMouseHovering = false;
     let shouldCloseOnLeave = false;
@@ -95,11 +101,13 @@ $(document).ready(function () {
         let interval = parseInt($('#interval').val(), 10) * 1000;
         chrome.storage.sync.set({ 'checkInterval': interval }, function () {
             let maxQuality = $('#max-quality').val();
+            let playbackSpeed = $('#playback-speed').val();
             let preferEnhancedBitrate = $('#prefer-enhanced-bitrate').prop('checked');
             sendEvent('setting_change', { setting: 'maxQuality', value: maxQuality });
             sendEvent('setting_change', { setting: 'preferEnhancedBitrate', value: preferEnhancedBitrate });
+            sendEvent('setting_change', { setting: 'playbackSpeed', value: playbackSpeed });
             sendEvent('setting_change', { setting: 'checkInterval', value: interval });
-            chrome.storage.sync.set({ 'maxQuality': maxQuality, 'preferEnhancedBitrate': preferEnhancedBitrate }, function () {
+            chrome.storage.sync.set({ 'maxQuality': maxQuality, 'preferEnhancedBitrate': preferEnhancedBitrate, 'playbackSpeed': playbackSpeed }, function () {
                 let messageDiv = $('#message');
                 messageDiv.show();
                 messageDiv[0].scrollIntoView({ behavior: "smooth" });
