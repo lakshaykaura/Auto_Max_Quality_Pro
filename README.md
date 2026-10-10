@@ -6,9 +6,11 @@ A browser extension designed to automatically switch YouTube & Other videos to t
 
 ## Key Features
 
-- **Auto 4K/8K**: Automatically selects the highest available resolution (up to 8K).
-- **Smart Bitrate Selection**: Prioritizes "Premium" or "Enhanced" bitrate options (e.g., 1080p Premium) over standard qualities when available.
-- **Interactive Donation UI**: A fun, tiered donation system integrated directly into the extension (Coffee ☕, Burger 🍔, Dining 🍴).
+- **Auto 4K/8K**: Automatically selects the highest available resolution (up to 8K), or any preferred quality from 144p to 4320p.
+- **Smart Bitrate Selection**: Prioritizes "Premium" or "Enhanced" bitrate options (e.g., 1080p Premium) over standard qualities when your YouTube account can play them, and never clicks the Premium upsell when it cannot. Can be switched off in the popup.
+- **Respects Manual Changes**: If you pick another quality yourself, it stays that way for the rest of the video.
+- **Preferred Playback Speed**: Optionally start every video at the speed you choose (1x to 2x). YouTube's own speed menu keeps working and stays in sync.
+- **Interactive Donation UI**: A fun, tiered donation system integrated directly into the extension (Coffee ☕, Burger 🍔, Dining 🍴), plus a PayPal QR code to scan.
 - **Zero Configuration**: Works out of the box, but fully customizable.
 
 ## Installation
