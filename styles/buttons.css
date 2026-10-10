@@ -22,6 +22,7 @@ button#donateBtn,
 button#donateBtn {
     background-color: var(--donate-button-color);
     border-color: var(--donate-button-color);
+    color: var(--text-color-dark);
 }
 
 button#donateBtn:hover {
@@ -39,7 +40,7 @@ button#donateBtn.back-button {
 /* Interactive Donate Button */
 .donate-button-container {
     margin-bottom: 20px;
-    height: 38px;
+    height: 30px;
 }
 
 .donate-wrapper {
@@ -68,40 +69,37 @@ button#donateBtn.back-button {
     position: relative;
 }
 
-/* Expanded State */
+/* Expanded State: the label stays at the right end, where the collapsed button was, so a second click closes it */
 .donate-wrapper.expanded .donate-trigger-btn {
     width: 290px;
     background-color: #fff;
     padding-left: 10px;
-    justify-content: flex-start;
+    justify-content: flex-end;
     border-color: #e91e63;
     box-shadow: 0 4px 12px rgba(233, 30, 99, 0.15);
 }
 
-.donate-wrapper.expanded .donate-trigger-btn .button-text {
-    opacity: 0;
-    width: 0;
-    margin: 0;
-    overflow: hidden;
-}
-
-/* Donate Options Container */
+/* Donate Options Container: ends left of the label (rem, like the label's own size), and is out of reach
+   (mouse and keyboard) while collapsed */
 .donate-options {
     position: absolute;
     top: 50%;
-    right: 5px;
+    right: 4.1rem;
     transform: translateY(-50%);
     display: flex;
     gap: 6px;
     opacity: 0;
+    visibility: hidden;
     pointer-events: none;
-    transition: opacity 0.2s ease 0.1s;
+    transition: opacity 0.2s ease 0.1s, visibility 0s linear 0.3s;
     z-index: 20;
 }
 
 .donate-wrapper.expanded .donate-options {
     opacity: 1;
+    visibility: visible;
     pointer-events: auto;
+    transition: opacity 0.2s ease 0.1s, visibility 0s;
 }
 
 /* Option Buttons */
