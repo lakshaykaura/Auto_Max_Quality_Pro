@@ -5,15 +5,34 @@
     text-align: center;
 }
 
+#settings {
+    position: relative;
+}
+
+/* Shown in place of the Save button: in the page flow it would push the popup past Chrome's 600px height cap */
 #message {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    z-index: 30;
     background-color: var(--alert-color);
     color: var(--text-color-dark);
-    padding: 5px 10px;
+    padding: 6px 10px;
     border-radius: 4px;
 }
 
 #donate-qr {
     margin: 20px 0 15px;
+}
+
+#donate-qr img {
+    border-radius: 6px;
+}
+
+#donate-qr .disclaimer {
+    margin: 10px 0 0;
 }
 
 .donate-button-container {
@@ -70,20 +89,27 @@ div.quality-selection {
     font-size: 14px;
 }
 
+.enhanced-bitrate-selection {
+    margin-bottom: 6px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* Vertical spacing is tight on purpose: Chrome caps the popup at 600px and scrolls anything taller */
 .disclaimer {
     margin-top: 5px;
-    margin-bottom: 25px;
+    margin-bottom: 8px;
     font-size: 12px;
     line-height: 1.5;
 }
 
 .hide-on-donate-click, .text-center {
-    margin-top: 1.5rem;
+    margin-top: 0.75rem;
 }
 
 .statistics-footer {
     padding-top: 8px;
-    margin-top: 12px;
+    margin-top: 8px;
     text-align: center;
     font-size: 10px;
     font-weight: 600;

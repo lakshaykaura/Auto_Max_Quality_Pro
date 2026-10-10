@@ -4,6 +4,9 @@ function initializeExtension() {
         const interval = data.checkInterval || 60000;
         if (window.location.host.includes('youtube.com') || window.location.host.includes('google') || (document.title.includes('YouTube'))) {
             window.checkAndAdjustYouTubeVideoQuality(interval);
+            if (window.checkAndAdjustYouTubeVideoSpeed) {
+                window.checkAndAdjustYouTubeVideoSpeed();
+            }
         } else if (window.location.host.includes('linkedin.com')) {
             //linkedin logic
         }
