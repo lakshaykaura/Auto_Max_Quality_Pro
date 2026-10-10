@@ -2,35 +2,17 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 
 try {
-    // Get the latest two tags to find the range.
-    // If only one tag, get from beginning.
-    // If no tags, get all.
-
-    // Note: formatting might depend on how the inputs are passed or git environment.
-    // Assuming this runs in an environment where git is available.
+    // List the commits since the previous release.
+    // The tag for the release being made does not exist yet at this point (the release step creates it afterwards),
+    // so the newest tag is the previous release. If this runs again after tagging, the release's own tag is skipped.
+    // If there are no tags, get all.
 
     let range = '';
     try {
-        const tags = execSync('git tag --sort=-creatordate').toString().split('\n').filter(Boolean);
-        if (tags.length >= 2) {
-            range = `${tags[1]}..HEAD`;
-        } else if (tags.length === 1) {
-            range = `${tags[0]}..HEAD`; // Or just HEAD if we are AT the tag? 
-            // Usually release workflow runs ON the tag or commit.
-            // If we are making a NEW release, we want logs since the LAST release.
-            range = `${tags[0]}..HEAD`;
-            // Wait, if the current commit IS the release commit (version bump), 
-            // we might want logs since PREVIOUS tag.
-            if (tags.length > 1) range = `${tags[1]}..HEAD`;
-            else range = `HEAD`; // Fallback
-        } else {
-            range = 'HEAD';
-        }
-
-        // Better approach for GitHub Actions often involves getting the previous release from API, 
-        // but let's try git first. 
-        // Actually, standard practice: git log $(git describe --tags --abbrev=0 ^HEAD)..HEAD
-
+        const currentTag = 'v' + String(process.env.CURRENT_RELEASE_VERSION || '').replace(/^v/, '');
+        const tags = execSync('git tag --sort=-creatordate').toString().split('\n').filter(Boolean)
+            .filter(tag => tag !== currentTag);
+        range = tags.length ? `${tags[0]}..HEAD` : 'HEAD';
     } catch (e) {
         console.log('Error getting tags, defaulting to all history');
         range = 'HEAD';
@@ -103,10 +85,11 @@ try {
     // Display mappings to match user style
     const categoryDisplay = {
         'Major Update': '🔄 Major Updates',
+        'Minor Update': '🔧 Minor Updates',
         'New Feature': '✨ New Features',
         'Improvement': '🎨 Improvements & Enhancements', // User used palette for UI, generic fits well
         'Performance': '⚡ Performance Improvements',
-        'Bug Fix': '�️ Bug Fixes',
+        'Bug Fix': '🐛 Bug Fixes',
         'Hotfix': '🔥 Hotfixes',
         'Security Fix': '🛡️ Security Updates',
         'Documentation Update': '📚 Documentation'
