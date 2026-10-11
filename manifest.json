@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Auto Max Quality Pro",
   "version": "2.3.1",
-  "description": "Automatically switches YouTube & Other videos to the highest/selected available quality.",
+  "description": "Automatically switches YouTube, Vimeo and Twitch videos to the highest or your preferred quality.",
   "permissions": [
     "storage",
     "activeTab"
@@ -23,7 +23,10 @@
         "scripts/libs/jquery-3.6.0.min.js",
         "scripts/common.js",
         "scripts/main.js",
-        "scripts/youtube.js"
+        "scripts/youtube.js",
+        "scripts/menu-player.js",
+        "scripts/vimeo.js",
+        "scripts/twitch.js"
       ],
       "all_frames": true
     },

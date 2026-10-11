@@ -7,6 +7,10 @@ function initializeExtension() {
             if (window.checkAndAdjustYouTubeVideoSpeed) {
                 window.checkAndAdjustYouTubeVideoSpeed();
             }
+        } else if (window.location.host === 'vimeo.com' || window.location.host.endsWith('.vimeo.com')) {
+            window.checkAndAdjustVimeoVideoQuality();
+        } else if (window.location.host === 'twitch.tv' || window.location.host.endsWith('.twitch.tv')) {
+            window.checkAndAdjustTwitchVideoQuality();
         } else if (window.location.host.includes('linkedin.com')) {
             //linkedin logic
         }
