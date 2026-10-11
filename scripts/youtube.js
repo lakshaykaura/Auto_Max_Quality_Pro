@@ -3,10 +3,28 @@ const PLAYER_INFO_REQUEST = 'amqp-player-info-request';
 const PLAYER_INFO_ATTRIBUTE = 'data-amqp-player-info';
 const PLAYBACK_RATE_REQUEST = 'amqp-playback-rate-request';
 const PLAYBACK_RATE_ATTRIBUTE = 'data-amqp-playback-rate';
+const QUALITY_REQUEST = 'amqp-quality-request';
+const QUALITY_ATTRIBUTE = 'data-amqp-quality';
 
 // The page can hold several players (watch page, miniplayer, hover previews); use the one that is on screen
 function getActiveYouTubePlayer() {
     return $('.html5-video-player:visible').has('button.ytp-settings-button').first();
+}
+
+// Embedded players and Shorts have no settings menu to click through
+function getMenulessYouTubePlayer() {
+    const players = $('.html5-video-player:visible');
+    return (location.pathname.startsWith('/embed/') ? players : players.filter('#shorts-player')).first();
+}
+
+// Set the quality through the player itself (via the page-world bridge), by the player's own name for it, e.g.
+// "hd1080". The bridge takes the request off the player once handled; returns whether it did.
+function setYouTubeQuality(player, quality) {
+    player.attr(QUALITY_ATTRIBUTE, quality);
+    document.dispatchEvent(new CustomEvent(QUALITY_REQUEST));
+    const handled = player.attr(QUALITY_ATTRIBUTE) === undefined;
+    player.removeAttr(QUALITY_ATTRIBUTE);
+    return handled;
 }
 
 // "Quality" is not always the last settings entry, so find it by its value: it is the only submenu entry showing a
@@ -101,6 +119,43 @@ window.checkAndAdjustYouTubeVideoQuality = function (interval) {
         return playerInfo && playerInfo.videoId ? `${playerInfo.videoId}|${maxQuality}|${preferEnhancedBitrate}` : null;
     }
 
+    // Players without a settings menu: choose among the standard qualities the player reports and set it directly
+    function adjustMenulessVideoQuality(maxQuality, showSwitchMessage) {
+        const player = getMenulessYouTubePlayer();
+        if (!player.length) {
+            return;
+        }
+
+        if (player.hasClass('ad-showing')) {
+            clearTimeout(adTimer);
+            adTimer = setTimeout(adjustVideoQuality, 1000);
+            return;
+        }
+
+        const playerInfo = getPlayerInfo(player);
+        const adjustmentKey = getAdjustmentKey(playerInfo, maxQuality, false);
+        if (!adjustmentKey || adjustmentKey === lastAdjustment || !playerInfo.levels) {
+            return;
+        }
+
+        const labels = playerInfo.playable.filter(label => /^\d{3,4}[ps]/.test(label) && !/premium/i.test(label) && playerInfo.levels[label]);
+        const resolution = pickPreferredResolution(labels.map(label => parseInt(label, 10)), maxQuality);
+        const label = labels.find(candidate => parseInt(candidate, 10) === resolution);
+        if (!label) {
+            return;
+        }
+
+        lastAdjustment = adjustmentKey;
+        if (playerInfo.levels[label] !== playerInfo.preferredQuality && setYouTubeQuality(player, playerInfo.levels[label])) {
+            sendEvent('quality_change', { quality: label });
+            trackMostCommonQuality(label);
+            incrementQualityChangeCount();
+            if (showSwitchMessage) {
+                showSuccessMessage(label, player);
+            }
+        }
+    }
+
     // Close the settings panel if it's still open, then let the next pass run
     function finishAdjusting(settingsButton) {
         // Reset the flag
@@ -121,12 +176,14 @@ window.checkAndAdjustYouTubeVideoQuality = function (interval) {
 
     // Function to adjust the quality of the YouTube video
     function adjustVideoQuality() {
-        chrome.storage.sync.get(['maxQuality', 'preferEnhancedBitrate'], function (data) {
+        chrome.storage.sync.get(['maxQuality', 'preferEnhancedBitrate', 'showSwitchMessage'], function (data) {
             const maxQuality = data.maxQuality || '1080p';
             const preferEnhancedBitrate = data.preferEnhancedBitrate !== false;
+            const showSwitchMessage = data.showSwitchMessage !== false;
             const player = getActiveYouTubePlayer();
             const settingsButton = player.find('button.ytp-settings-button');
             if (!settingsButton.length) {
+                adjustMenulessVideoQuality(maxQuality, showSwitchMessage);
                 return;
             }
 
@@ -191,8 +248,10 @@ window.checkAndAdjustYouTubeVideoQuality = function (interval) {
                             sendEvent('quality_change', { quality: qualityText });
                             trackMostCommonQuality(qualityText);
                             incrementQualityChangeCount();
-                            const videoFrame = selectedQuality.parents('div.html5-video-player');
-                            showSuccessMessage(qualityText, videoFrame);
+                            if (showSwitchMessage) {
+                                const videoFrame = selectedQuality.parents('div.html5-video-player');
+                                showSuccessMessage(qualityText, videoFrame);
+                            }
                         }
                     } finally {
                         finishAdjusting(settingsButton);
