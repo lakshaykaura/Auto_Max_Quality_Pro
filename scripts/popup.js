@@ -70,6 +70,11 @@ $(document).ready(function () {
         $('#prefer-enhanced-bitrate').prop('checked', data.preferEnhancedBitrate !== false);
     });
 
+    //Fetch and display whether the "switched quality" message is shown (on unless switched off)
+    chrome.storage.sync.get('showSwitchMessage', function (data) {
+        $('#show-switch-message').prop('checked', data.showSwitchMessage !== false);
+    });
+
     //Fetch and display the current playback speed ("YouTube default" until one is chosen)
     chrome.storage.sync.get('playbackSpeed', function (data) {
         let speed = data.playbackSpeed || '';
@@ -103,11 +108,13 @@ $(document).ready(function () {
             let maxQuality = $('#max-quality').val();
             let playbackSpeed = $('#playback-speed').val();
             let preferEnhancedBitrate = $('#prefer-enhanced-bitrate').prop('checked');
+            let showSwitchMessage = $('#show-switch-message').prop('checked');
             sendEvent('setting_change', { setting: 'maxQuality', value: maxQuality });
             sendEvent('setting_change', { setting: 'preferEnhancedBitrate', value: preferEnhancedBitrate });
+            sendEvent('setting_change', { setting: 'showSwitchMessage', value: showSwitchMessage });
             sendEvent('setting_change', { setting: 'playbackSpeed', value: playbackSpeed });
             sendEvent('setting_change', { setting: 'checkInterval', value: interval });
-            chrome.storage.sync.set({ 'maxQuality': maxQuality, 'preferEnhancedBitrate': preferEnhancedBitrate, 'playbackSpeed': playbackSpeed }, function () {
+            chrome.storage.sync.set({ 'maxQuality': maxQuality, 'preferEnhancedBitrate': preferEnhancedBitrate, 'showSwitchMessage': showSwitchMessage, 'playbackSpeed': playbackSpeed }, function () {
                 let messageDiv = $('#message');
                 messageDiv.show();
                 messageDiv[0].scrollIntoView({ behavior: "smooth" });
