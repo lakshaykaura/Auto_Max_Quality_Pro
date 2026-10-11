@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Auto Max Quality Pro",
-  "version": "2.3.1",
+  "version": "2.4.0",
   "description": "Automatically switches YouTube, Vimeo and Twitch videos to the highest or your preferred quality.",
   "permissions": [
     "storage",
