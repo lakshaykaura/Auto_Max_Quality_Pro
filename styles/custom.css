@@ -9,6 +9,10 @@
     position: relative;
 }
 
+#settings .form-group {
+    margin-bottom: 10px;
+}
+
 /* Shown in place of the Save button: in the page flow it would push the popup past Chrome's 600px height cap */
 #message {
     position: absolute;
@@ -90,15 +94,22 @@ div.quality-selection {
 }
 
 .enhanced-bitrate-selection {
-    margin-bottom: 6px;
+    margin-bottom: 0;
+}
+
+.enhanced-bitrate-selection, .switch-message-selection {
     font-size: 12px;
     line-height: 1.5;
+}
+
+.switch-message-selection {
+    margin-bottom: 6px;
 }
 
 /* Vertical spacing is tight on purpose: Chrome caps the popup at 600px and scrolls anything taller */
 .disclaimer {
     margin-top: 5px;
-    margin-bottom: 8px;
+    margin-bottom: 5px;
     font-size: 12px;
     line-height: 1.5;
 }

@@ -16,6 +16,16 @@ function trackMostCommonQuality(quality) {
     });
 }
 
+// Pick from the resolutions a video offers: the preferred one or the next best below it. If they are all higher,
+// the highest. Returns null when there is nothing to pick from.
+function pickPreferredResolution(resolutions, maxQuality) {
+    // "Highest Available" puts no cap on the resolution
+    const maxResolution = parseInt(maxQuality, 10) || Infinity;
+    const suitable = resolutions.filter(resolution => resolution <= maxResolution);
+    const candidates = suitable.length ? suitable : resolutions;
+    return candidates.length ? Math.max(...candidates) : null;
+}
+
 // Function to show a success message in video when the quality is changed
 function showSuccessMessage(selectedQuality, videoFrame) {
     const successMessage = $('<div>', {
@@ -49,6 +59,18 @@ function showSuccessMessage(selectedQuality, videoFrame) {
             }, 500);
         }, 1500);
     }, 100);
+}
+
+// Record a quality switch (statistics, analytics) and, unless switched off in the popup, show the message over the video
+function reportQualitySwitch(qualityText, videoFrame) {
+    sendEvent('quality_change', { quality: qualityText });
+    trackMostCommonQuality(qualityText);
+    incrementQualityChangeCount();
+    chrome.storage.sync.get('showSwitchMessage', function (data) {
+        if (data.showSwitchMessage !== false) {
+            showSuccessMessage(qualityText, videoFrame);
+        }
+    });
 }
 
 // Send GA Event helper
